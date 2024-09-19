@@ -25,7 +25,7 @@ const CompletedJobSeeker = ({
   const {width} = useWindowDimensions();
 
   const generateHtmlPreview = () => {
-    let html = `<p style="color: black;">${data?.job.job_description}</p>`;
+    let html = `<p style="color: black;">${data?.job?.job_description}</p>`;
     html = html.replace(/\n/g, '<br/>');
     return html;
   };
@@ -71,7 +71,7 @@ const CompletedJobSeeker = ({
                 fontFamily: 'Montserrat-Bold',
                 fontSize: responsiveFontSize(1.75),
               }}>
-              {data?.job.title}
+              {data?.job?.title}
             </Text>
 
             <Text

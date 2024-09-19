@@ -146,3 +146,6 @@ const MyJobs = ({navigation}: MyJobsProps) => {
 };
 
 export default React.memo(MyJobs);
+
+//profile -> not_work, assigned, completed, 
+

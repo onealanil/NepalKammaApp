@@ -1,10 +1,8 @@
 import axios from 'axios';
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Button, SafeAreaView} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {
   KhatiSdk,
-  KhatiPaymentResponse,
-  KhatiPaymentEvent,
 } from 'rn-all-nepal-payment';
 import {SuccessToast} from '../../components/SuccessToast';
 import {JobStore} from '../Job_provider/helper/JobStore';
@@ -81,6 +79,7 @@ const Khalti = ({isVisible, setIsVisible, job_data, getCompletedJob}: any) => {
           20,
           'online',
         );
+        console.log(response.data);
         updateJobStatus(job_data?._id, 'Paid', job_data?.assignedTo._id);
         setIsVisible(false);
         SuccessToast('Payment Successful');
@@ -106,7 +105,7 @@ const Khalti = ({isVisible, setIsVisible, job_data, getCompletedJob}: any) => {
         productIdentity={'1234567890'}
         onPaymentComplete={_onPaymentComplete}
         productUrl={'http://gameofthrones.wikia.com/wiki/Dragons'}
-        publicKey={'live_public_key_9c4e227bdb294a8397f49ffee8ba42b6'}
+        publicKey={'test_public_key_7158ad7a084447d2a0de7cc7ad2433c3'}
       />
     </SafeAreaView>
   );

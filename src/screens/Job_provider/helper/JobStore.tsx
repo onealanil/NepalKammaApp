@@ -34,7 +34,7 @@ export const JobStore = create(set => ({
     }
   },
   EditJobStatus: async (id: string, job_status: string, assignedTo: string) => {
-    try {
+    try {                                              
       const response = await axios_auth.put(`/job/updateJobStatus/${id}`, {
         job_status,
         assignedTo,
