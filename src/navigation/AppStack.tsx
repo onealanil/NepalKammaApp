@@ -1,29 +1,11 @@
-// import {View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  getItem,
-  getItemOnboarding,
-  getTokenKeyChain,
-} from '../utils/asyncStorage';
+import {getItemOnboarding, getTokenKeyChain} from '../utils/asyncStorage';
 import {Home, Login, OnboardingScreen, OtpScreen, Signup} from '../screens';
-// import {JobProvider, JobSeeker} from '../screens';
 import DrawerStack from './DrawerStack';
 import Loading from '../screens/GlobalComponents/Loading';
 import DrawerStackSeeker from './DrawerStackSeeker';
 import ForgetPass from '../screens/LoginSignup/ForgetPass';
-
-export type RootStackParamsList = {
-  Onboarding: undefined;
-  Login: undefined;
-  Signup: undefined;
-  OTP: {id: string; email: string; timer: string};
-  Job_Seeker: undefined;
-  Job_Provider: undefined;
-  Other_Profile: {id: string};
-  forget_password: undefined;
-};
 
 const stack = createNativeStackNavigator();
 
@@ -39,9 +21,7 @@ const AppStack = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = await getTokenKeyChain('currentUser');
-        console.log('User context app stack:', token);
-
+        const token = await getTokenKeyChain();
         if (token) {
           setCurrentUser(token);
         }
@@ -55,21 +35,6 @@ const AppStack = () => {
     fetchUser();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     // const storedCurrentUser = await AsyncStorage.getItem('currentUser');
-  //     // console.log("this is storedCurrentUser", storedCurrentUser);
-  //     getTokenKeyChain('currentUser').then(token => {
-  //       console.log('User context', token);
-  //       setCurrentUser(token);
-  //       setLoading(false);
-  //     });
-  //     // setCurrentUser(storedCurrentUser);
-  //   };
-
-  //   fetchUser();
-  // }, []);
-
   const checkIfHomePage: any = async () => {
     let onboarding = await getItemOnboarding('onboarding');
 
@@ -78,8 +43,6 @@ const AppStack = () => {
     } else {
       setIsOnboarding(true);
     }
-    // can remove it
-    // setLoading(false);
   };
 
   if (isOnboarding == null) {

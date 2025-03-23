@@ -8,9 +8,7 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import React, {memo, useCallback, useEffect, useRef} from 'react';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import {BottomStackParamsList} from '../../navigation/ButtonNavigatorSeeker';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -26,37 +24,11 @@ import {useSocket} from '../../contexts/SocketContext';
 import {formatDistanceToNow} from 'date-fns';
 import {useMessageStore} from '../../global/MessageCount';
 import MessageLoader from '../GlobalComponents/Loader/MessageLoader';
-import {FlashList} from '@shopify/flash-list';
-
-interface ActualMessageProps {
-  navigation: BottomTabNavigationProp<BottomStackParamsList>;
-  route: {params: {conversation_id: string}};
-}
-
-interface User {
-  _id: string;
-  profilePic: {
-    public_id: string;
-    url: string;
-  };
-  username: string;
-}
-
-interface Message {
-  __v: number;
-  _id: string;
-  conversationId: string;
-  createdAt: string;
-  msg: string;
-  senderId: string;
-  updatedAt: string;
-  recipientId: string;
-}
-
-interface ApiResponse {
-  otheruser: User;
-  result: Message[];
-}
+import {
+  ActualMessageProps,
+  ApiResponse,
+  User,
+} from '../../types/interfaces/IActualMessage';
 
 const ActualMessage = ({navigation, route}: ActualMessageProps) => {
   const isFocused = useIsFocused();

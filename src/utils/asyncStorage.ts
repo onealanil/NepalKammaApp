@@ -22,13 +22,11 @@ export const setItemOnboarding = async (key: string, value: string) => {
 };
 
 //set the item in async storage
-export const setToken = async (key: string, value: string) => {
+export const setToken = async (value: string) => {
   try {
-    console.log("This function called: ", key, value);
-    // await AsyncStorage.setItem(key, value);
-    await Keychain.setGenericPassword(key, value);
+    await Keychain.setGenericPassword("currentUser", value);
   } catch (err) {
-    ErrorToast('Error occured while setting item in async storage');
+    ErrorToast('Error occurred while setting item in Keychain');
   }
 };
 
@@ -70,13 +68,11 @@ export const removeItem = async (key: string) => {
 };
 
 //export key chain token
-export const getTokenKeyChain = async (key: string) => {
+export const getTokenKeyChain = async () => {
   try {
     const credentials = await Keychain.getGenericPassword();
-    if (credentials && credentials.username === key) {
-      console.log("Retrieved value:", credentials.password);
-      console.log("Retrived value", credentials);
-      return credentials.password;
+    if (credentials && credentials.username === "currentUser") {
+      return credentials.password; // Return the token (password)
     }
     return null;
   } catch (err) {
@@ -88,10 +84,10 @@ export const getTokenKeyChain = async (key: string) => {
 //remove key chain token
 export const removeTokenKeyChain = async () => {
   try {
-    await Keychain.resetGenericPassword();
+    await Keychain.resetGenericPassword(); // Clear the Keychain
   } catch (err) {
-    ErrorToast('Error occured while removing item from async storage');
+    ErrorToast('Error occurred while removing item from Keychain');
   }
-}
+};
 
 

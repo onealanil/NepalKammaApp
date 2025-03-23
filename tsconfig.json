@@ -1,3 +1,4 @@
 {
+  // "include": ["src/**/*", "env.d.ts"],
   "extends": "@tsconfig/react-native/tsconfig.json"
 }

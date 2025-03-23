@@ -6,8 +6,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import {setItemOnboarding} from '../utils/asyncStorage';
-import { OnBoardingScreenProps } from '../types/OnboardingScreen';
-
+import {OnBoardingScreenProps} from '../types/OnboardingScreen';
 
 const OnboardingScreen = ({navigation}: OnBoardingScreenProps) => {
   //handle skip

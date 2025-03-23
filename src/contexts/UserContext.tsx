@@ -6,7 +6,6 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getTokenKeyChain} from '../utils/asyncStorage';
 
 type UserContextType = {
@@ -24,11 +23,18 @@ export const UserProvider = ({children}: {children: React.ReactNode}) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      // const storedCurrentUser = await AsyncStorage.getItem('currentUser');
-      //getting the token from the key chain
-      getTokenKeyChain('currentUser').then(res => {
-        setCurrentUser(res);
-      });
+      try {
+        // Retrieve the token from Keychain
+        const token = await getTokenKeyChain();
+        if (token) {
+          setCurrentUser(token); // Set the token in the context state
+        } else {
+          setCurrentUser(null); // No token found
+        }
+      } catch (error) {
+        console.error('Error fetching token from Keychain:', error);
+        setCurrentUser(null); // Handle errors by setting the user to null
+      }
     };
 
     fetchUser();

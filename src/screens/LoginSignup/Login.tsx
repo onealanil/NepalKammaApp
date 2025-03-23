@@ -1,4 +1,11 @@
-import {View, Text, TouchableOpacity, TextInput, Image, findNodeHandle} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  findNodeHandle,
+} from 'react-native';
 import {removeItem, setToken} from '../../utils/asyncStorage';
 import {
   responsiveFontSize,
@@ -73,18 +80,22 @@ const Login = ({navigation}: LoginScreenProps) => {
         password: values.password,
         fcm_token: await AsyncStorage.getItem('fcm_token'),
       };
-      console.log(finalValues)
+      console.log(finalValues);
       const response = await (LoginSignupStore.getState() as any).loginUser(
         finalValues,
       );
       setCurrentUser(response.token);
       setUser(response.user);
       SuccessToast(response.message);
-      response.user.role === 'job_seeker' && navigation.replace('Job_Seeker');
-      response.user.role === 'job_provider' &&
+
+      // Store the token in Keychain
+      await setToken(response.token);
+
+      if (response.user.role === 'job_seeker') {
+        navigation.replace('Job_Seeker');
+      } else if (response.user.role === 'job_provider') {
         navigation.replace('Job_Provider');
-      // setting the token in async storage
-      setToken('currentUser', response.token);
+      }
     } catch (error: any) {
       const errorMessage = error
         .toString()

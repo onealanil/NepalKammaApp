@@ -1,7 +1,6 @@
 import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
 import React, {useState, useRef} from 'react';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {DrawerStackParamsListSeeker} from '../../../navigation/DrawerStackSeeker';
 import {RouteProp} from '@react-navigation/native';
 import {
   responsiveFontSize,
@@ -15,13 +14,15 @@ import axios from 'axios';
 import {UserStore} from '../helper/UserStore';
 import {SuccessToast} from '../../../components/SuccessToast';
 import {useGlobalStore} from '../../../global/store';
+import {DrawerStackParamsListSeeker} from '../../../types/DrawerStackTypes';
+import {REACT_APP_RAPIDAPI_KEY} from '@env';
 
 interface PhoneVerificationProps {
   navigation: DrawerNavigationProp<DrawerStackParamsListSeeker, 'Phone_Verify'>;
   route: RouteProp<DrawerStackParamsListSeeker, 'Phone_Verify'>;
 }
 
-const PhoneVerification = ({navigation, route}: PhoneVerificationProps) => {
+const PhoneVerification = ({navigation}: PhoneVerificationProps) => {
   const {user, checkAuth} = useGlobalStore();
   const [value, setValue] = useState<string>(user?.phoneNumber || '');
   const [formattedValue, setFormattedValue] = useState<string>('');
@@ -58,7 +59,7 @@ const PhoneVerification = ({navigation, route}: PhoneVerificationProps) => {
         country: countrycode,
       },
       headers: {
-        'X-RapidAPI-Key': '6ad617a4e9mshbf68e80b72d0afep1fc0a5jsn412d88e1c12d',
+        'X-RapidAPI-Key': REACT_APP_RAPIDAPI_KEY,
         'X-RapidAPI-Host': 'phonenumbervalidatefree.p.rapidapi.com',
       },
     };

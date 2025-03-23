@@ -13,16 +13,6 @@ import ActualMessage from '../screens/Job_seeker/ActualMessage';
 import {useMessageStore} from '../global/MessageCount';
 import {useNotificationCount} from '../global/NotificationCount';
 
-export type BottomStackParamsList = {
-  Home_bottom: undefined;
-  explore: {id: string};
-  CreateGigs: undefined;
-  Message: undefined;
-  Notifications: undefined;
-  Other_Profile: {id: string};
-  Actual_Message: {conversation_id: string};
-};
-
 const Tab = createBottomTabNavigator();
 
 const ButtonNavigatorSeeker = () => {

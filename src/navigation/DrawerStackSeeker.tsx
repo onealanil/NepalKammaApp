@@ -4,9 +4,6 @@ import CustomDrawerSeeker from '../screens/Job_seeker/custom_drawer/CustomDrawer
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import ButtonNavigatorSeeker, {
-  BottomStackParamsList,
-} from './ButtonNavigatorSeeker';
 import MyProfile from '../screens/Job_seeker/MyProfile';
 import TopBuyer from '../screens/Job_seeker/TopBuyer';
 import PhoneVerification from '../screens/Job_seeker/phone_verification/PhoneVerification';
@@ -15,19 +12,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import SavedJobs from '../screens/Job_seeker/SavedJobs';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import MyReview from '../screens/Job_provider/MyReview';
-
-export type DrawerStackParamsListSeeker = {
-  Home: undefined;
-  My_Profile: undefined;
-  My_Review: undefined;
-  Top_Buyer: undefined;
-  Completed_Jobs: undefined;
-  Phone_Verify: {id: string};
-  Saved_Jobs: undefined;
-};
+import {BottomStackParamsList} from '../types/ButtonNavigatorTypes';
+import ButtonNavigatorSeeker from './ButtonNavigatorSeeker';
 
 interface savedJobsProps {
-  bottomNavigation: BottomTabNavigationProp<BottomStackParamsList>;
+  bottomNavigation?: BottomTabNavigationProp<BottomStackParamsList>;
 }
 
 const Drawer = createDrawerNavigator();
@@ -116,7 +105,15 @@ const DrawerStackSeeker = ({bottomNavigation}: savedJobsProps) => {
       {/*  invisible  */}
       <Drawer.Screen
         name="Phone_Verify"
-        component={PhoneVerification}
+        children={props => (
+          <PhoneVerification
+            {...props}
+            route={{
+              ...props.route,
+              params: {id: 'default-id'},
+            }}
+          />
+        )}
         options={{
           drawerLabel: () => null,
           drawerIcon: () => null,

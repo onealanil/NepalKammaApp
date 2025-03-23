@@ -2,9 +2,8 @@ import React, {useEffect} from 'react';
 import {useGlobalStore} from '../global/store';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamsList} from '../navigation/AppStack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from './GlobalComponents/Loading';
-import { removeTokenKeyChain } from '../utils/asyncStorage';
+import {getTokenKeyChain, removeTokenKeyChain} from '../utils/asyncStorage';
 
 interface mainHomeStoreState {
   checkAuth: () => Promise<any>;
@@ -21,29 +20,29 @@ interface MainHomeScreenProps {
 const MainHome = React.memo(({navigation}: MainHomeScreenProps) => {
   useEffect(() => {
     const checkAuthentication = async () => {
-      const response = await (
-        useGlobalStore.getState() as mainHomeStoreState
-      ).checkAuth();
+      const token = await getTokenKeyChain(); // Retrieve the token
+      if (token) {
+        const response = await (
+          useGlobalStore.getState() as mainHomeStoreState
+        ).checkAuth();
 
-      // if response is true
-      if (response) {
-        const getUser = (useGlobalStore.getState() as userStateProps).user;
-
-        console.log(getUser);
-        // if user is job seeker
-        getUser &&
-          getUser.role === 'job_seeker' &&
-          navigation.replace('Job_Seeker');
-        // if user is job provider
-        getUser &&
-          getUser.role === 'job_provider' &&
-          navigation.replace('Job_Provider');
+        if (response) {
+          const getUser = (useGlobalStore.getState() as userStateProps).user;
+          if (getUser && getUser.role === 'job_seeker') {
+            navigation.replace('Job_Seeker');
+          } else if (getUser && getUser.role === 'job_provider') {
+            navigation.replace('Job_Provider');
+          }
+        } else {
+          await removeTokenKeyChain(); // Clear the token from Keychain
+          useGlobalStore.setState({user: null});
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Login'}],
+          });
+        }
       } else {
-        // not logged in than clear the id in local storage
-        // AsyncStorage.removeItem('currentUser');
-        console.log("User: this called");
-        removeTokenKeyChain()
-        useGlobalStore.setState({user: null});
+        // No token found, navigate to login
         navigation.reset({
           index: 0,
           routes: [{name: 'Login'}],

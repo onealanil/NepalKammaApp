@@ -31,6 +31,7 @@
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-native": "^0.72.7",
+    "react-native-dotenv": "^3.4.11",
     "react-native-drop-shadow": "^1.0.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-geolocation-service": "^5.3.1",
