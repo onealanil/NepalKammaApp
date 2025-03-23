@@ -4,6 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamsList} from '../navigation/AppStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from './GlobalComponents/Loading';
+import { removeTokenKeyChain } from '../utils/asyncStorage';
 
 interface mainHomeStoreState {
   checkAuth: () => Promise<any>;
@@ -27,6 +28,8 @@ const MainHome = React.memo(({navigation}: MainHomeScreenProps) => {
       // if response is true
       if (response) {
         const getUser = (useGlobalStore.getState() as userStateProps).user;
+
+        console.log(getUser);
         // if user is job seeker
         getUser &&
           getUser.role === 'job_seeker' &&
@@ -37,7 +40,9 @@ const MainHome = React.memo(({navigation}: MainHomeScreenProps) => {
           navigation.replace('Job_Provider');
       } else {
         // not logged in than clear the id in local storage
-        AsyncStorage.removeItem('currentUser');
+        // AsyncStorage.removeItem('currentUser');
+        console.log("User: this called");
+        removeTokenKeyChain()
         useGlobalStore.setState({user: null});
         navigation.reset({
           index: 0,

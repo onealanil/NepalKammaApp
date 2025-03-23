@@ -1,23 +1,19 @@
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {
   responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {getItem, setItem} from '../utils/asyncStorage';
-import {RootStackParamsList} from '../navigation/AppStack';
+import {setItemOnboarding} from '../utils/asyncStorage';
+import { OnBoardingScreenProps } from '../types/OnboardingScreen';
 
-interface OnBoardingScreenProps {
-  navigation: StackNavigationProp<RootStackParamsList, 'Onboarding'>;
-}
 
 const OnboardingScreen = ({navigation}: OnBoardingScreenProps) => {
   //handle skip
   const handleBoarding = () => {
     navigation.navigate('Login');
-    setItem('onboarding', '1');
+    setItemOnboarding('onboarding', '1');
   };
 
   return (

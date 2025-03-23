@@ -1,13 +1,16 @@
-import {View, Text} from 'react-native';
+// import {View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getItem} from '../utils/asyncStorage';
+import {
+  getItem,
+  getItemOnboarding,
+  getTokenKeyChain,
+} from '../utils/asyncStorage';
 import {Home, Login, OnboardingScreen, OtpScreen, Signup} from '../screens';
-import {JobProvider, JobSeeker} from '../screens';
+// import {JobProvider, JobSeeker} from '../screens';
 import DrawerStack from './DrawerStack';
 import Loading from '../screens/GlobalComponents/Loading';
-import OtherProfile from '../screens/Job_provider/OtherProfile';
 import DrawerStackSeeker from './DrawerStackSeeker';
 import ForgetPass from '../screens/LoginSignup/ForgetPass';
 
@@ -31,21 +34,44 @@ const AppStack = () => {
 
   useEffect(() => {
     checkIfHomePage();
-    
   }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const storedCurrentUser = await AsyncStorage.getItem('currentUser');
-      setCurrentUser(storedCurrentUser);
-      setLoading(false);
+      try {
+        const token = await getTokenKeyChain('currentUser');
+        console.log('User context app stack:', token);
+
+        if (token) {
+          setCurrentUser(token);
+        }
+      } catch (error) {
+        console.error('Error fetching user token:', error);
+      } finally {
+        setLoading(false); // Ensure loading is set to false only once
+      }
     };
 
     fetchUser();
   }, []);
 
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     // const storedCurrentUser = await AsyncStorage.getItem('currentUser');
+  //     // console.log("this is storedCurrentUser", storedCurrentUser);
+  //     getTokenKeyChain('currentUser').then(token => {
+  //       console.log('User context', token);
+  //       setCurrentUser(token);
+  //       setLoading(false);
+  //     });
+  //     // setCurrentUser(storedCurrentUser);
+  //   };
+
+  //   fetchUser();
+  // }, []);
+
   const checkIfHomePage: any = async () => {
-    let onboarding = await getItem('onboarding');
+    let onboarding = await getItemOnboarding('onboarding');
 
     if (onboarding == '1') {
       setIsOnboarding(false);
