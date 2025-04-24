@@ -1,3 +1,9 @@
+/**
+ * @file OnboardingScreen.tsx
+ * @description This file contains the OnboardingScreen component which is the first screen that the user sees when they open the app. It contains a logo, a tagline, and a button to get started.
+ * @author Anil Bhandari
+ */
+
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {
@@ -9,7 +15,10 @@ import {setItemOnboarding} from '../utils/asyncStorage';
 import {OnBoardingScreenProps} from '../types/OnboardingScreen';
 
 const OnboardingScreen = ({navigation}: OnBoardingScreenProps) => {
-  //handle skip
+  
+  /**
+   * @description This function is called when the user presses the "Get Started" button. It navigates to the Login screen and sets the onboarding item in async storage.
+   */
   const handleBoarding = () => {
     navigation.navigate('Login');
     setItemOnboarding('onboarding', '1');
