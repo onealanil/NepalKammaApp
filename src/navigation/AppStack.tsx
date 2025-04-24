@@ -1,3 +1,10 @@
+/**
+ * @file AppStack.tsx
+ * @description This file contains the AppStack component which is responsible for managing the navigation stack of the application.
+ * It includes the onboarding screen, login screen, signup screen, OTP screen, home screen, and the drawer stacks for job seekers and job providers.
+ * @author Anil Bhandari
+ */
+
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {getItemOnboarding, getTokenKeyChain} from '../utils/asyncStorage';
@@ -19,6 +26,9 @@ const AppStack = () => {
   }, []);
 
   useEffect(() => {
+    /**
+     * @description This function fetches the user token from the keychain and sets the current user state.
+     */
     const fetchUser = async () => {
       try {
         const token = await getTokenKeyChain();
@@ -34,6 +44,12 @@ const AppStack = () => {
 
     fetchUser();
   }, []);
+
+  /**
+   *
+   * @description This function checks if the user is on the onboarding screen or not.
+   * @returns {Promise<void>}
+   */
 
   const checkIfHomePage: any = async () => {
     let onboarding = await getItemOnboarding('onboarding');
