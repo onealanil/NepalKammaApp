@@ -1,17 +1,12 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-} from 'react';
-import {getTokenKeyChain} from '../utils/asyncStorage';
+/**
+ * @file UserContext.tsx
+ * @description This file contains the UserContext component, which is a context provider for the user.
+ * @author Anil Bhandari
+ */
 
-type UserContextType = {
-  currentUser: string | null;
-  setCurrentUser: Dispatch<SetStateAction<string | null>>;
-};
+import React, {createContext, useContext, useState, useEffect} from 'react';
+import {getTokenKeyChain} from '../utils/asyncStorage';
+import {UserContextType} from '../types/UserContextType';
 
 export const UserContext = createContext<UserContextType>({
   currentUser: null,
@@ -26,7 +21,7 @@ export const UserProvider = ({children}: {children: React.ReactNode}) => {
       try {
         // Retrieve the token from Keychain
         const token = await getTokenKeyChain();
-        console.log("this is token from user context, ", token);
+        console.log('this is token from user context, ', token);
         if (token) {
           setCurrentUser(token); // Set the token in the context state
         } else {
