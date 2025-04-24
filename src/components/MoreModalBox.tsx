@@ -1,3 +1,8 @@
+/**
+ * @file MoreModalBox.tsx
+ * @description This file contains the MoreModalBox component, which is a modal that allows users to report a user or view their location on a map.
+ */
+
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useCallback} from 'react';
 import Modal from 'react-native-modal';
@@ -16,6 +21,16 @@ import {TextInput} from 'react-native-gesture-handler';
 import {ReportStore} from '../screens/GlobalComponents/helper/ReportStore';
 import {SuccessToast} from './SuccessToast';
 
+/**
+ *
+ * @param isModalVisible - boolean value to show or hide the modal
+ * @param setIsModalVisible - function to set the modal visibility
+ * @param address - address object containing coordinates
+ * @param reportedBy - user object who is reporting
+ * @param reportedTo - user object who is being reported
+ * @component
+ * @returns- Returns a modal component with options to report a user or view their location on a map.
+ */
 const MoreModalBox = ({
   isModalVisible,
   setIsModalVisible,
@@ -29,15 +44,20 @@ const MoreModalBox = ({
   const [reportText, setReportText] = React.useState<string>('');
   const [isReporting, setIsReporting] = React.useState<boolean>(false);
 
-
   const status = [
     {id: 1, name: 'report this user'},
     {id: 2, name: 'view on map'},
   ];
 
+  /**
+   * @function _goToYosemite
+   * @description This function is used to open the map with the user's location and the reported user's location.
+   * @returns {void}
+   * @throws {Error} If the user location is not available or if the document is not verified.
+   */
   const _goToYosemite = useCallback(() => {
     if (reportedBy?.isDocumentVerified !== 'verified') {
-      console.log(reportedBy)
+      console.log(reportedBy);
       ErrorToast('Please verify your document first');
       return;
     }
@@ -56,6 +76,12 @@ const MoreModalBox = ({
     }
   }, [selectedStatus]);
 
+  /**
+   * @function ReportUserHandler
+   * @description This function is used to report a user. It checks if the user has verified their document and if the report text is not empty. If both conditions are met, it sends the report to the server.
+   * @returns {void}
+   * @throws {Error} If the report text is empty or if the document is not verified.
+   */
   const ReportUserHandler = useCallback(async () => {
     if (reportedBy?.isDocumentVerified !== 'verified') {
       ErrorToast('Please verify your document first');

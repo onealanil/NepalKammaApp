@@ -1,3 +1,7 @@
+/**
+ * @file ModalBox.tsx
+ * @description This file contains a modal component that displays a message and an OK button.
+ */
 import React from 'react';
 import {
   View,
@@ -19,11 +23,22 @@ import {axios_auth} from '../global/config';
 import {ErrorToast} from './ErrorToast';
 import UserItem from './UserItem';
 
+/**
+ *
+ * @param isModalVisible - A boolean indicating whether the modal is visible or not.
+ * @param handleOkFunction - A function to be called when the OK button is pressed.
+ * @param setSelectedStatus - A function to set the selected status.
+ * @param selectedStatus - The currently selected status.
+ * @param setIsModalVisible - A function to set the modal visibility.
+ * @param setSelectedUsers - A function to set the selected users.
+ * @param selectedUsers - The currently selected users.
+ * @description ModalBoxJob component is used to display a modal for selecting the status of a job and searching for users.
+ * @component
+ * @returns {JSX.Element} - Returns a modal component with job status selection and user search functionality.
+ */
 const ModalBoxJob = ({
-  modalMessage,
   isModalVisible,
   handleOkFunction,
-  responseMessage,
   setSelectedStatus,
   selectedStatus,
   setIsModalVisible,
@@ -41,6 +56,14 @@ const ModalBoxJob = ({
     {id: 4, name: 'Cancelled'},
   ];
 
+  /**
+   *
+   * @returns {Promise<void>} - A promise that resolves when the user search is complete.
+   * @description This function handles the user search functionality. It sends a request to the server to search for users based on the entered username.
+   * @async
+   * @function searchUserHandler
+   *
+   */
   const searchUserHandler = async () => {
     if (searchText === '') return ErrorToast('Please enter a username');
     setIsLoadingSearch(true);
@@ -55,6 +78,13 @@ const ModalBoxJob = ({
     setIsLoadingSearch(false);
   };
 
+  /**
+   *
+   * @param user - The user object to be selected or deselected.
+   * @description This function handles the selection and deselection of users in the modal.
+   * @function handleSelect
+   *
+   */
   const handleSelect = (user: any) => {
     if (selectedUsers.includes(user)) {
       setSelectedUsers(selectedUsers.filter((u: any) => u !== user));

@@ -1,3 +1,8 @@
+/**
+ * @file ModalBoxFilter.tsx
+ * @description This file contains the ModalBoxFilter component, which is used to display a modal for filtering job listings based on distance and sorting options.
+ */
+
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {
@@ -10,6 +15,22 @@ import DistanceOption from './DistanceOption';
 import {useGlobalStore} from '../global/store';
 import Entypo from 'react-native-vector-icons/Entypo';
 
+/**
+ *
+ * @param modalMessage - The message to be displayed in the modal.
+ * @param isModalVisible - A boolean indicating whether the modal is visible or not.
+ * @param handleOkFunction - A function to be called when the OK button is pressed.
+ * @param resetSearch - A function to reset the search filters.
+ * @param setSelectedDistance - A function to set the selected distance.
+ * @param setLowToHigh - A function to set the low to high sorting option.
+ * @param setHighToLow - A function to set the high to low sorting option.
+ * @param setSortByRating - A function to set the sort by rating option.
+ * @param selectedDistance - The currently selected distance.
+ * @param setModalVisible - A function to set the modal visibility.
+ * @description ModalBoxFilter component is used to display a modal for filtering job listings based on distance and sorting options.
+ * @component
+ * @returns {JSX.Element} - Returns a modal component with filtering options.
+ */
 const ModalBoxFilter = ({
   modalMessage,
   isModalVisible,
@@ -28,6 +49,11 @@ const ModalBoxFilter = ({
   const [highToLow, setHighToLowState] = useState<boolean>(false);
   const [sortByRating, setSortByRatingState] = useState<boolean>(false);
 
+  /**
+   * @function handleLowToHighPress
+   * @description Handles the press event for the "Low to High" button. Sets the state for low to high sorting and resets other sorting states.
+   * @returns {void}
+   */
   const handleLowToHighPress = useCallback(() => {
     setLowToHighState(true);
     setHighToLowState(false);
@@ -37,6 +63,11 @@ const ModalBoxFilter = ({
     setSortByRating(false);
   }, []);
 
+  /**
+   * @function handleHighToLowPress
+   * @description Handles the press event for the "High to Low" button. Sets the state for high to low sorting and resets other sorting states.
+   * @returns {void}
+   */
   const handleHighToLowPress = useCallback(() => {
     setLowToHighState(false);
     setHighToLowState(true);
@@ -46,6 +77,11 @@ const ModalBoxFilter = ({
     setSortByRating(false);
   }, []);
 
+  /**
+   * @function handleSortByRatingPress
+   * @description Handles the press event for the "Sort by Rating" button. Sets the state for sorting by rating and resets other sorting states.
+   * @returns {void}
+   */
   const handleSortByRatingPress = useCallback(() => {
     setLowToHighState(false);
     setHighToLowState(false);
@@ -55,6 +91,11 @@ const ModalBoxFilter = ({
     setSortByRating(true);
   }, []);
 
+  /**
+   * @function handleOkFunction
+   * @description Handles the press event for the OK button. Calls the provided handleOkFunction and sets the modal visibility to false.
+   * * @returns {void}
+   */
   const handleResetFunction = useCallback(() => {
     setLowToHighState(false);
     setHighToLowState(false);

@@ -1,8 +1,20 @@
+/**
+ * @file Who.tsx
+ * @description This file contains the Who component which is used to select between Job Seeker and Job Provider.
+ * @component
+ */
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
 import {JobProvider, JobSeeker} from './SvgComponents';
 
+/**
+ *
+ * @param setWho - A function to set the state of who is selected (job seeker or job provider).
+ * @description This component renders a view with two options: Job Seeker and Job Provider.
+ * @returns A view with two options to select from.
+ * @component
+ */
 const Who = ({setWho}: any) => {
   return (
     <>

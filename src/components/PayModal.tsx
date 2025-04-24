@@ -1,3 +1,7 @@
+/**
+ * @file PayModal.tsx
+ * @description This file contains the PayModal component which is used to handle the payment process for a job.
+ */
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 import React from 'react';
 import {
@@ -7,13 +11,21 @@ import {
 } from 'react-native-responsive-dimensions';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {KhaltiStore} from '../screens/GlobalComponents/helper/KhaltiStore';
 import {SuccessToast} from './SuccessToast';
 import {ErrorToast} from './ErrorToast';
 import {JobStore} from '../screens/Job_provider/helper/JobStore';
 
+/**
+ *
+ * @param setIsVisible - function to set the visibility of the modal
+ * @param isModalVisible - boolean to check if the modal is visible
+ * @param getCompletedJob - function to get the completed job
+ * @param job_data - data of the job
+ * @description PayModal component is used to handle the payment process for a job.
+ * @returns PayModal component
+ */
 const PayModal = ({
   setIsVisible,
   isModalVisible,
@@ -23,7 +35,15 @@ const PayModal = ({
   const [amount, setAmount] = React.useState<number>(0);
   const [isPaying, setIsPaying] = React.useState<boolean>(false);
 
-  //update job status
+  /**
+   * @function updateJobStatus
+   * @param id - string - id of the job
+   * @param job_status - string - status of the job
+   * @param selectedUserId - string - id of the user
+   * @description This function is used to update the job status.
+   * @returns {Promise<void>} - Promise that resolves when the job status is updated
+   * @throws {Error} - If there is an error while updating the job status
+   */
   const updateJobStatus = async (
     id: string,
     job_status: string,
@@ -46,6 +66,17 @@ const PayModal = ({
     }
   };
 
+  /**
+   *
+   * @param paymentBy -string - id of the user who is making the payment
+   * @param paymentTo - string - id of the user who is receiving the payment
+   * @param job - string - id of the job
+   * @param amount - number - amount to be paid
+   * @param payment_type -string - type of payment (e.g. cash, card)
+   * @description This function is used to create a payment.
+   * @returns {Promise<void>} - Promise that resolves when the payment is created
+   * @throws {Error} - If there is an error while creating the payment
+   */
   const createPayment = async (
     paymentBy: string,
     paymentTo: string,
@@ -71,17 +102,23 @@ const PayModal = ({
     }
   };
 
+  /**
+   * @function offlinePaymentHandler
+   * @description This function is used to handle the offline payment process.
+   * @returns {Promise<void>} - Promise that resolves when the offline payment is handled
+   * @throws {Error} - If there is an error while handling the offline payment
+   */
   const offlinePaymentHandler = async () => {
     setIsPaying(true);
     try {
-      createPayment(
+      await createPayment(
         job_data?.postedBy._id,
         job_data?.assignedTo._id,
         job_data?._id,
         amount,
         'cash',
       );
-      updateJobStatus(job_data?._id, 'Paid', job_data?.assignedTo._id);
+      await updateJobStatus(job_data?._id, 'Paid', job_data?.assignedTo._id);
 
       setIsVisible(false);
     } catch (error: any) {

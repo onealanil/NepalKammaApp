@@ -1,3 +1,8 @@
+/**
+ * @file ModalBox.tsx
+ * @description This file contains a modal component that displays a message and an OK button.
+ *
+ */
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {
@@ -7,7 +12,22 @@ import {
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const ModalBox = ({modalMessage, isModalVisible, handleOkFunction, responseMessage}: any) => {
+/**
+ *
+ * @param modalMessage - The message to be displayed in the modal.
+ * @param isModalVisible - A boolean that determines if the modal is visible or not.
+ * @param handleOkFunction - A function to be called when the OK button is pressed.
+ * @param responseMessage - A message to be displayed in the modal.
+ * @description This component renders a modal with a message and an OK button.
+ * @component 
+ * @returns A modal component.
+ */
+const ModalBox = ({
+  modalMessage,
+  isModalVisible,
+  handleOkFunction,
+  responseMessage,
+}: any) => {
   return (
     <View>
       <Modal isVisible={isModalVisible}>

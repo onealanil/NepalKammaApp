@@ -1,8 +1,24 @@
-import React, {useState} from 'react';
+/**
+ * @file DistanceOption.tsx
+ * @description This file contains the DistanceOption component, which is a modal that allows users to select a distance option.
+ * @author Anil Bhandari
+ */
+
+import React from 'react';
 import {Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
 import Modal from 'react-native-modal';
 
+/**
+ * 
+ * @param setModalVisible - Function to set the modal visibility
+ * @param modalVisible - Boolean to check if the modal is visible
+ * @param setSelectedDistance - Function to set the selected distance
+ * @param selectedDistance - The currently selected distance
+ * @description This component renders a button that opens a modal with distance options. 
+ * @component
+ * @returns A modal with distance options.
+ */
 const DistanceOption = ({
   setModalVisible,
   modalVisible,

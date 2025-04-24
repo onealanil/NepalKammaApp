@@ -1,12 +1,25 @@
+/**
+ * @file UserItem.tsx
+ * @description This file contains the UserItem component, which is used to display a user's profile picture and username in a list.
+ */
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 
-const UserItem = ({ profilePic, username, selected, onSelect }:any) => {
+/**
+ *
+ * @param profilePic - The URL of the user's profile picture.
+ * @param username - The username of the user.
+ * @param selected - A boolean indicating whether the user is selected or not.
+ * @param onSelect - A function to be called when the user selects or deselects the user.
+ * @returns A React component that displays a user's profile picture and username, along with a selection button.
+ * @component
+ */
+const UserItem = ({profilePic, username, selected, onSelect}: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
-        <Image source={{ uri: profilePic }} style={styles.profilePic} />
+        <Image source={{uri: profilePic}} style={styles.profilePic} />
         <Text style={styles.username}>{username}</Text>
       </View>
       <TouchableOpacity style={styles.selectButton} onPress={onSelect}>

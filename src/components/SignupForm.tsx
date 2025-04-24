@@ -1,3 +1,7 @@
+/**
+ * @file SignupForm.tsx
+ * @description This file contains the SignupForm component which is used for user registration.
+ */
 import {View, Text, TextInput, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {Formik} from 'formik';
@@ -9,33 +13,16 @@ import {
 } from 'react-native-responsive-dimensions';
 import {LoginSignupStore} from '../screens/LoginSignup/helper/LoginSignupStore';
 import {ErrorToast} from './ErrorToast';
-import {StackNavigationProp} from '@react-navigation/stack';
 import ModalBox from './ModalBox';
-import {RootStackParamsList} from '../navigation/AppStack';
 import {Picker} from '@react-native-picker/picker';
 import {genderList} from '../screens/GlobalComponents/SkillsData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-interface SignUpDetails {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-  security_answer?: string;
-  role?: string | null;
-  gender?: string | null;
-  fcm_token?: string | null;
-}
-
-interface SignupFormProps {
-  navigation: StackNavigationProp<RootStackParamsList>;
-  role: any;
-}
-
-interface LoginSignupStoreState {
-  signupUser: (values: SignUpDetails) => Promise<any>;
-}
+import {
+  LoginSignupStoreState,
+  SignUpDetails,
+  SignupFormProps,
+} from '../types/interfaces/ISignupForm';
 
 // Define validation schema with Yup
 const validationSchema = Yup.object().shape({
@@ -52,8 +39,14 @@ const validationSchema = Yup.object().shape({
   security_answer: Yup.string().required('Security answer is required'),
 });
 
+/**
+ *
+ * @param role - The role of the user (e.g., 'user', 'admin')
+ * @param navigation - The navigation prop for navigating between screens
+ * @returns SignupForm component
+ * @description This component renders a signup form with fields for username, email, password, confirm password, security question answer
+ */
 const SignupForm = ({role, navigation}: SignupFormProps) => {
-  //  state
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [gender, setGender] = React.useState<string>('');
@@ -75,7 +68,15 @@ const SignupForm = ({role, navigation}: SignupFormProps) => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  // handle signup
+  /**
+   *
+   * @param values - The values entered in the signup form
+   * @description This function handles the signup process by calling the signupUser function from the store and passing the user details.
+   * @returns void
+   * @throws Error if the signup process fails
+   * @async
+   * @function handleSignup
+   */
   const handleSignup = async (values: SignUpDetails) => {
     setIsSubmitting(true);
     try {
@@ -111,7 +112,11 @@ const SignupForm = ({role, navigation}: SignupFormProps) => {
     setIsSubmitting(false);
   };
 
-  // handle ok function
+  /**
+   * @function handleOkFunction
+   * @description This function handles the OK button click in the modal. It navigates to the OTP screen with the user ID and email.
+   * @returns void
+   */
   const handleOkFunction = () => {
     if (otpDetails.userId && otpDetails.email) {
       setModalVisible(false);
