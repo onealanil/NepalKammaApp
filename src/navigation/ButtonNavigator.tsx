@@ -1,3 +1,9 @@
+/**
+ * @file ButtonNavigator.tsx
+ * @description This file contains the bottom tab navigator for the app.
+ * @author Anil Bhandari
+ */
+
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {JobProvider} from '../screens';
@@ -7,22 +13,11 @@ import Notifications from '../screens/Job_seeker/Notifications';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import People from '../screens/Job_provider/Search';
-import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import OtherProfile from '../screens/Job_provider/OtherProfile';
 import ActualMessage from '../screens/Job_seeker/ActualMessage';
 import {useMessageStore} from '../global/MessageCount';
 import { useNotificationCount } from '../global/NotificationCount';
 
-export type BottomStackParamsList = {
-  Home: undefined;
-  Peoples: {id: string};
-  Create: undefined;
-  Message: undefined;
-  Notifications: undefined;
-  Other_Profile: {id: string};
-  Actual_Message: {conversation_id: string};
-};
 
 const Tab = createBottomTabNavigator();
 
