@@ -1,3 +1,9 @@
+/**
+ * @file DrawerStackSeeker.tsx
+ * @description This file contains the DrawerStackSeeker component, which is a React Navigation drawer navigator for the job seeker. It includes various screens such as Home, My Profile, My Review, Top Buyer, Completed Jobs, and Saved Jobs. The component uses custom icons from Ionicons, Octicons, FontAwesome, and MaterialCommunityIcons.
+ * @author Anil Bhandari
+ */
+
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import CustomDrawerSeeker from '../screens/Job_seeker/custom_drawer/CustomDrawerSeeker';
@@ -10,14 +16,10 @@ import PhoneVerification from '../screens/Job_seeker/phone_verification/PhoneVer
 import CompletedJobs from '../screens/Job_seeker/CompletedJobs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SavedJobs from '../screens/Job_seeker/SavedJobs';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import MyReview from '../screens/Job_provider/MyReview';
-import {BottomStackParamsList} from '../types/ButtonNavigatorTypes';
 import ButtonNavigatorSeeker from './ButtonNavigatorSeeker';
+import { savedJobsProps } from '../types/interfaces/ISavedJobsProps';
 
-interface savedJobsProps {
-  bottomNavigation?: BottomTabNavigationProp<BottomStackParamsList>;
-}
 
 const Drawer = createDrawerNavigator();
 

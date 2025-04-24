@@ -1,30 +1,22 @@
+/**
+ * @file DrawerStack.tsx
+ * @description This file contains the DrawerStack component which is used to create a drawer navigator for the app.
+ * @author Anil Bhandari
+ */
+
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {JobProvider} from '../screens';
 import CustomDrawer from '../screens/Job_provider/custom_drawer/CustomDrawer';
-import Profile from '../screens/Job_provider/Profile';
 import MyMileStone from '../screens/Job_provider/MyMileStone';
-import TopSeller from '../screens/Job_provider/TopSeller';
 import MyReview from '../screens/Job_provider/MyReview';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ButtonNavigator from './ButtonNavigator';
 import MyProfile from '../screens/Job_seeker/MyProfile';
 import MyJobs from '../screens/Job_provider/MyJobs';
 import CompletedJobs from '../screens/Job_provider/CompletedJobs';
 import PhoneVerification from '../screens/Job_seeker/phone_verification/PhoneVerification';
-
-export type DrawerStackParamsList = {
-  Home: undefined;
-  My_Profile: undefined;
-  My_Jobs: undefined;
-  Review: undefined;
-  Payment: undefined;
-  Milestone: undefined;
-  Phone_Verify: {id: string};
-};
 
 const Drawer = createDrawerNavigator();
 
