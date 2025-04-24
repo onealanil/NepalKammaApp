@@ -1,3 +1,9 @@
+/**
+ * @file ButtonNavigatorSeeker.tsx
+ * @description This file contains the ButtonNavigatorSeeker component which is a bottom tab navigator for the job seeker.
+ * @author Anil Bhandari
+ */
+
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {JobSeeker} from '../screens';
