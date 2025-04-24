@@ -1,21 +1,18 @@
+/**
+ * @file MainHome.tsx
+ * @description This file contains the MainHome component, which is responsible for checking the authentication status of the user and navigating to the appropriate screen based on their role.
+ * @author Anil Bhandari
+ */
+
 import React, {useEffect} from 'react';
 import {useGlobalStore} from '../global/store';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsList} from '../navigation/AppStack';
 import Loading from './GlobalComponents/Loading';
 import {getTokenKeyChain, removeTokenKeyChain} from '../utils/asyncStorage';
-
-interface mainHomeStoreState {
-  checkAuth: () => Promise<any>;
-}
-
-interface userStateProps {
-  user: any;
-}
-
-interface MainHomeScreenProps {
-  navigation: StackNavigationProp<RootStackParamsList>;
-}
+import {
+  MainHomeScreenProps,
+  mainHomeStoreState,
+  userStateProps,
+} from '../types/interfaces/IMainHome';
 
 const MainHome = React.memo(({navigation}: MainHomeScreenProps) => {
   useEffect(() => {
