@@ -1,26 +1,35 @@
-import {create} from 'zustand';
-import {axios_auth} from './config';
+/**
+ * @file store.ts
+ * @description This file contains the global store for the application using Zustand.
+ * @author Anil Bhandari
+ */
 
-interface GlobalStoreState {
-  user: any;
-  checkAuth: () => Promise<boolean>;
-  setUser: (user: any) => void;
-}
+import { create } from 'zustand';
+import { axios_auth } from './config';
+import { GlobalStoreState } from '../types/interfaces/IGlobalStoreState';
 
+/**
+ * @description This is the global store for the application using Zustand.
+ * @property {any} user - The user object.
+ * @property {Function} checkAuth - Function to check if the user is authenticated.
+ * @property {Function} setUser - Function to set the user object.
+ * @returns {GlobalStoreState} - The global store state.
+ * 
+ */
 export const useGlobalStore = create<GlobalStoreState>(set => ({
   user: null,
   checkAuth: async () => {
     try {
       const res = await axios_auth.get('auth/check-auth');
       if (res.data?.status === 'success') {
-        set(() => ({user: res?.data?.user}));
+        set(() => ({ user: res?.data?.user }));
         return true;
       }
       return false;
     } catch (error) {
-      set(() => ({user: null}));
+      set(() => ({ user: null }));
       return false;
     }
   },
-  setUser: (user: any) => set(() => ({user})),
+  setUser: (user: any) => set(() => ({ user })),
 }));
