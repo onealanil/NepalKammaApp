@@ -1,13 +1,19 @@
+/**
+ * @file config.js
+ * @description This file contains the configuration for the API endpoints and axios instances used in the application.
+ * @author Anil Bhandari
+ */
+
 import axios from 'axios';
 import {getTokenKeyChain} from '../utils/asyncStorage';
 
 //college testing ip -> IIC staff
-export const API_URL = 'http://192.168.20.136:8000/api/v1';
+export const API_URL = 'http://192.168.20.52:8000/api/v1';
 
 // export const API_URL = 'http://192.168.1.18:8000/api/v1';
 
 //college
-export const BACKEND_URL = 'http://192.168.20.136:8000';
+export const BACKEND_URL = 'http://192.168.20.52:8000';
 // export const BACKEND_URL = 'http://192.168.1.18:8000';
 
 // Axios instance without authentication
