@@ -18,7 +18,7 @@ const DistanceOption = ({
     <>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <Text
-          className="text-black w-[137px] py-3 border-b-2 border-black"
+          className="text-black py-3 border-b-2 border-black"
           style={{
             fontFamily: 'Montserrat-SemiBold',
             fontSize: responsiveFontSize(2),

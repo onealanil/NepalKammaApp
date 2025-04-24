@@ -158,7 +158,7 @@ function CreateForm() {
   };
 
   return (
-    <View className="w-[100%] py-5 bg-white flex items-center justify-center">
+    <View className="w-[100%] py-5 h-[100%] bg-white flex items-center justify-center">
       <View className="w-[85%] flex flex-row gap-x-2 pb-4">
         <Text
           className="text-black"

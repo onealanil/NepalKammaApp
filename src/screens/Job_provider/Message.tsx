@@ -33,16 +33,30 @@ const Message = ({navigation}: MessageProps) => {
   const [onlineUsers, setOnlineUsers] = useState([] as any);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    socket.emit('getOnlineUsers', {message: 'get online users'});
+  React.useEffect(() => {
+    const fetchOnlineUsers = () => {
+      socket?.emit('getOnlineUsers');
+      console.log('Requested online users');
+    };
 
-    // Event listener for 'getU' event
-    socket.on('getU', (data: any) => {
-      setOnlineUsers(data);
+    const onlineUsersListener = (data: any) => {
+      console.log('Received online users:', data);
+      // Ensure we have a proper array
+      const formattedData = Array.isArray(data) ? data : [];
+      setOnlineUsers(formattedData);
+    };
+
+    fetchOnlineUsers();
+    socket?.on('getOnlineUsers', onlineUsersListener);
+
+    // Add error handling
+    socket?.on('connect_error', (err: any) => {
+      console.error('Socket connection error:', err);
     });
-    // Clean up the event listener when component unmounts
+
     return () => {
-      socket.off('getU');
+      socket?.off('getOnlineUsers', onlineUsersListener);
+      socket?.off('connect_error');
     };
   }, [socket]);
 
@@ -127,7 +141,7 @@ const Message = ({navigation}: MessageProps) => {
                 horizontal={true}
                 estimatedItemSize={90}
                 data={conversations?.slice(0, 10)}
-                keyExtractor={(item:any) => item._id.toString()}
+                keyExtractor={(item: any) => item._id.toString()}
                 contentContainerStyle={{
                   padding: responsiveHeight(1),
                 }}
@@ -203,6 +217,58 @@ const MemoizedConversation = memo(({data, onlineUsers}: any) => (
   <Conversation data={data} onlineUsers={onlineUsers} />
 ));
 
+// const MemoizedConversationItem = memo(({item, onlineUsers}: any) => {
+//   console.log("this is memoized conversation item", item, onlineUsers);
+//   const userId = item?.conversation[0]?._id?.toString();
+//   const isOnline = isUserOnline(userId, onlineUsers);
+
+//   console.log(`Checking online status for user ${userId}:`, isOnline);
+//   console.log('Online users data:', onlineUsers);
+
+//   return (
+//     <View style={{alignItems: 'center', marginRight: responsiveWidth(4)}}>
+//       <FastImage
+//         source={{uri: item?.conversation[0].profilePic?.url}}
+//         style={{
+//           width: responsiveHeight(9),
+//           height: responsiveHeight(9),
+//           borderRadius: 100,
+//         }}
+//       />
+//       <View
+//         style={{
+//           position: 'absolute',
+//           right: 0,
+//           bottom: 12,
+//           width: responsiveHeight(2.5),
+//           height: responsiveHeight(2.5),
+//           borderRadius: 100,
+//           backgroundColor: isOnline ? 'green' : 'red',
+//           borderWidth: 2,
+//           borderColor: 'white',
+//         }}
+//       />
+//       <Text style={{
+//         marginTop: responsiveHeight(1),
+//         fontFamily: 'Montserrat-Bold',
+//         fontSize: responsiveFontSize(1.25),
+//         color: 'black',
+//       }}>
+//         {item?.conversation[0]?.username}
+//       </Text>
+//     </View>
+//   );
+// },
+// // Custom comparison function to prevent unnecessary re-renders
+// (prevProps, nextProps) => {
+//   const prevUserId = prevProps.item?.conversation[0]?._id?.toString();
+//   const nextUserId = nextProps.item?.conversation[0]?._id?.toString();
+//   const prevOnline = isUserOnline(prevUserId, prevProps.onlineUsers);
+//   const nextOnline = isUserOnline(nextUserId, nextProps.onlineUsers);
+
+//   return prevUserId === nextUserId && prevOnline === nextOnline;
+// });
+
 const MemoizedConversationItem = memo(({item, onlineUsers}: any) => (
   <View
     style={{
@@ -258,10 +324,27 @@ const MemoizedConversationItem = memo(({item, onlineUsers}: any) => (
   </View>
 ));
 
-const isUserOnline = (item: any, onlineUsers: any) => {
-  return onlineUsers?.find(
-    (u: any) => u?.userId === item?.conversation[0]?._id,
-  );
+const isUserOnline = (
+  item: any,
+  onlineUsers: any[] | undefined | null,
+): boolean => {
+  // Check if onlineUsers is valid
+
+  console.log(item, onlineUsers, 'isUserOnline function called');
+  if (!onlineUsers || !Array.isArray(onlineUsers)) return false;
+
+  // Safely get the conversation user ID
+  const conversationUserId = item;
+  console.log(conversationUserId, 'conversationUserId');
+
+  // If we couldn't get a valid ID, return false
+  if (!conversationUserId) return false;
+
+  // Check if this user exists in onlineUsers
+  return onlineUsers.some(onlineUser => {
+    const onlineUserId = onlineUser?.userId?.toString();
+    return onlineUserId && onlineUserId === conversationUserId;
+  });
 };
 
 export default Message;

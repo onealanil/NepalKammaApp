@@ -1,19 +1,16 @@
-import React, { ReactNode } from 'react';
-import { SocketProvider } from './SocketContext';
-import { UserProvider } from './UserContext';
-
+import React, {ReactNode} from 'react';
+import {SocketProvider} from './SocketContext';
+import {UserProvider} from './UserContext';
 
 interface AppProviderProps {
   children: ReactNode;
 }
 
-const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+const AppProvider: React.FC<AppProviderProps> = ({children}) => {
   return (
-    <SocketProvider>
-      <UserProvider>
-        {children}
-      </UserProvider>
-    </SocketProvider>
+    <UserProvider>
+      <SocketProvider>{children}</SocketProvider>
+    </UserProvider>
   );
 };
 

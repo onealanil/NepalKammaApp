@@ -88,7 +88,7 @@ const ModalBoxFilter = ({
                 }}>
                 {modalMessage ? modalMessage : ''}
               </Text>
-              <View className=" w-[100%]  flex flex-col items-center mb-2 justify-center">
+              <View className=" w-[100%] flex flex-col items-center mb-2 justify-center">
                 <TouchableOpacity onPress={handleLowToHighPress}>
                   <Text
                     className={`text-black py-3 border-y-2 border-black ${
@@ -115,7 +115,7 @@ const ModalBoxFilter = ({
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSortByRatingPress}>
                   <Text
-                    className={`text-black w-[137px] py-3 border-b-2 border-black ${
+                    className={`text-black py-3 border-b-2 border-black ${
                       sortByRating ? 'text-color2' : ''
                     }`}
                     style={{

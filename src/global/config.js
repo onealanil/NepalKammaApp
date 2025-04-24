@@ -2,13 +2,13 @@ import axios from 'axios';
 import {getTokenKeyChain} from '../utils/asyncStorage';
 
 //college testing ip -> IIC staff
-// export const API_URL = 'http://192.168.20.68:8000/api/v1';
+export const API_URL = 'http://192.168.20.136:8000/api/v1';
 
-export const API_URL = 'http://192.168.1.18:8000/api/v1';
+// export const API_URL = 'http://192.168.1.18:8000/api/v1';
 
 //college
-// export const BACKEND_URL = 'http://192.168.20.68:8000';
-export const BACKEND_URL = 'http://192.168.1.18:8000';
+export const BACKEND_URL = 'http://192.168.20.136:8000';
+// export const BACKEND_URL = 'http://192.168.1.18:8000';
 
 // Axios instance without authentication
 export const axios_no_auth = axios.create({

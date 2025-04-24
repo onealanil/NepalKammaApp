@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, FlatList, Image} from 'react-native';
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -31,17 +31,24 @@ const Message = ({navigation}: MessageProps) => {
   const [onlineUsers, setOnlineUsers] = React.useState([] as any);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
+
+  console.log(socket);
+
+  // In your frontend component
   React.useEffect(() => {
-    socket.emit('getOnlineUsers', {message: 'get online users'});
+    const fetchOnlineUsers = () => {
+      socket?.emit('getOnlineUsers');
+    };
 
-    // Event listener for 'getU' event
-    socket.on('getU', (data: any) => {
+    const onlineUsersListener = (data: any) => {
       setOnlineUsers(data);
-    });
+    };
 
-    // Clean up the event listener when component unmounts
+    fetchOnlineUsers();
+    socket?.on('getOnlineUsers', onlineUsersListener);
+
     return () => {
-      socket.off('getU');
+      socket?.off('getOnlineUsers', onlineUsersListener);
     };
   }, [socket]);
 
@@ -60,7 +67,7 @@ const Message = ({navigation}: MessageProps) => {
       ErrorToast(errorMessage);
     }
     setIsLoading(false);
-  },[]);
+  }, []);
 
   React.useEffect(() => {
     if (isFocused) {
@@ -218,9 +225,7 @@ const Message = ({navigation}: MessageProps) => {
                 paddingBottom:
                   item.length < 2 ? responsiveHeight(15) : responsiveHeight(1),
               }}
-              onPress={() => clickedConversationHandler(item._id.toString())}
-
-            >
+              onPress={() => clickedConversationHandler(item._id.toString())}>
               <Conversation data={item} />
             </TouchableOpacity>
           )}

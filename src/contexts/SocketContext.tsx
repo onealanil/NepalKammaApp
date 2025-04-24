@@ -1,55 +1,82 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import {io, Socket} from 'socket.io-client';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 import { BACKEND_URL } from '../global/config';
+import { useUserContext } from './UserContext';
 
 interface SocketContextProps {
   children: React.ReactNode;
 }
 
-interface DefaultEventsMap {
-}
+const SocketContext = createContext<Socket | null>(null);
 
-type SocketType = Socket<DefaultEventsMap, DefaultEventsMap>;
+export const useSocket = (): Socket | null => useContext(SocketContext);
 
-// const SocketContext = createContext<SocketType | null>(null);
-const SocketContext = createContext<any>(null);
+export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const { currentUser } = useUserContext();
 
-
-// export const useSocket = (): SocketType | null => useContext(SocketContext);
-export const useSocket = (): any=> useContext(SocketContext);
-
-
-export const SocketProvider: React.FC<SocketContextProps> = ({children}) => {
-  // const [socket, setSocket] = useState<SocketType | null>(null);
-  const [socket, setSocket] = useState<any>(null);
-
-  //search job 2 times api called
+  console.log("this is current user", currentUser);
 
   useEffect(() => {
-    const newSocket = io(BACKEND_URL);
+    if (!currentUser) return;
 
-    newSocket.on('connect', () => {
-      console.log('Connected to server');
-    });
-  
-    newSocket.on('disconnect', (reason: string) => {
-      console.log(`Disconnected from server due to: ${reason}`);
-    });
-  
-    newSocket.on('error', (error: Error) => {
-      console.log(`An error occurred: ${error.message}`);
-    });
-    setSocket(newSocket);
+    const socketOptions = {
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      autoConnect: true,
+      transports: ['websocket'],
+      auth: {
+        token: currentUser, // This is crucial
+      },
+      extraHeaders: {
+        // For development only - remove in production
+        'Access-Control-Allow-Origin': '*', 
+      },
+    };
 
-    // Return a cleanup function
-    return () => {
-      if (newSocket) {
-        newSocket.disconnect();
+    const newSocket = io(BACKEND_URL, socketOptions);
+
+    // Enhanced logging for debugging
+    const onConnect = () => {
+      console.log('Socket connected with ID:', newSocket.id);
+      console.log('Authentication token sent:', currentUser);
+    };
+
+    const onDisconnect = (reason: string) => {
+      console.log(`Disconnected: ${reason}`);
+      if (reason === 'io server disconnect') {
+        setTimeout(() => newSocket.connect(), 5000);
       }
     };
-  }, []);
+
+    const onConnectError = (error: Error) => {
+      console.error('Connection error:', error);
+    };
+
+    newSocket.on('connect', onConnect);
+    newSocket.on('disconnect', onDisconnect);
+    newSocket.on('connect_error', onConnectError);
+
+    // Add ping/pong handlers
+    newSocket.on('ping', () => {
+      newSocket.emit('pong');
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.off('connect', onConnect);
+      newSocket.off('disconnect', onDisconnect);
+      newSocket.off('connect_error', onConnectError);
+      newSocket.disconnect();
+    };
+  }, [currentUser]);
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={socket}>
+      {children}
+    </SocketContext.Provider>
   );
 };

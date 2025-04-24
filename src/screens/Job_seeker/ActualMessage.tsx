@@ -170,6 +170,8 @@ const ActualMessage = ({navigation, route}: ActualMessageProps) => {
         msg: message,
       });
 
+      console.log(sender, message," this is from message");
+
       // Append the received message to the messages state
       setMessages((prevMessages: any) => {
         const newMessage = {
