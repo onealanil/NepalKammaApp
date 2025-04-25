@@ -1,11 +1,9 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  findNodeHandle,
-} from 'react-native';
+/**
+ * @file Login.tsx
+ * @description This file contains the Login component which is used for user authentication.
+ */
+
+import {View, Text, TouchableOpacity, TextInput, Image} from 'react-native';
 import {removeItem, setToken} from '../../utils/asyncStorage';
 import {
   responsiveFontSize,
@@ -13,7 +11,6 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import {LoginSVG} from '../../components/SvgComponents';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -23,23 +20,9 @@ import {ErrorToast} from '../../components/ErrorToast';
 import {SuccessToast} from '../../components/SuccessToast';
 import {useUserContext} from '../../contexts/UserContext';
 import {useGlobalStore} from '../../global/store';
-import {RootStackParamsList} from '../../navigation/AppStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-interface LoginScreenProps {
-  navigation: StackNavigationProp<RootStackParamsList>;
-}
-
-interface LoginDetails {
-  email: string;
-  password: string;
-  fcm_token?: string;
-}
-
-interface LoginSignupStoreState {
-  loginUser: (values: LoginDetails) => Promise<any>;
-}
+import {LoginDetails, LoginScreenProps} from '../../types/interfaces/ILogin';
 
 // Define validation schema with Yup
 const validationSchema = Yup.object().shape({
@@ -49,6 +32,12 @@ const validationSchema = Yup.object().shape({
     .required('Password is required'),
 });
 
+/**
+ *
+ * @param naviagtion - navigation prop
+ * @description Login component for user authentication.
+ * @returns Login component
+ */
 const Login = ({navigation}: LoginScreenProps) => {
   // global store state
   const setUser = useGlobalStore((state: any) => state.setUser);
@@ -69,9 +58,15 @@ const Login = ({navigation}: LoginScreenProps) => {
 
   //context
   const {setCurrentUser} = useUserContext();
-  const {currentUser} = useUserContext();
 
-  // login handler
+  /**
+   *
+   * @param values - login details
+   * @description login handler function that checks if the user is logged in or not and navigates to the appropriate screen.
+   * @returns void
+   * @async
+   * @function loginHandlerFunction
+   */
   const loginHandlerFunction = async (values: LoginDetails) => {
     setIsLoggingIn(true);
     try {

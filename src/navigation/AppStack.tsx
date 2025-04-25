@@ -14,6 +14,18 @@ import Loading from '../screens/GlobalComponents/Loading';
 import DrawerStackSeeker from './DrawerStackSeeker';
 import ForgetPass from '../screens/LoginSignup/ForgetPass';
 
+
+export type RootStackParamsList = {
+  Onboarding: undefined;
+  Login: undefined;
+  Signup: undefined;
+  OTP: {id: string; email: string; timer: string};
+  Job_Seeker: undefined;
+  Job_Provider: undefined;
+  Other_Profile: {id: string};
+  forget_password: undefined;
+};
+
 const stack = createNativeStackNavigator();
 
 const AppStack = () => {

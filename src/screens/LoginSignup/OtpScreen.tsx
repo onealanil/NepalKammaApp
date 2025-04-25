@@ -1,3 +1,8 @@
+/**
+ * @file OtpScreen.tsx
+ * @description This file contains the OtpScreen component which is used to verify the OTP sent to the user's email.
+ */
+
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {
@@ -7,23 +12,21 @@ import {
 } from 'react-native-responsive-dimensions';
 import OTPTextView from 'react-native-otp-textinput';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
 import {ErrorToast} from '../../components/ErrorToast';
 import {LoginSignupStore} from './helper/LoginSignupStore';
 import ModalBox from '../../components/ModalBox';
-import {RootStackParamsList} from '../../navigation/AppStack';
+import {
+  LoginSignupStoreState,
+  OtpScreenProps,
+} from '../../types/interfaces/IOtpScreen';
 
-interface OtpScreenProps {
-  navigation?: StackNavigationProp<RootStackParamsList>;
-  route?: RouteProp<RootStackParamsList, 'OTP'>;
-}
-
-interface LoginSignupStoreState {
-  verifyUser: (data: {userId: string; otp: string}) => Promise<any>;
-  resendOTP: (data: {userId: string; email: string}) => Promise<any>;
-}
-
+/**
+ *
+ * @param navigation - The navigation prop for navigating between screens.
+ * @param route - The route prop for getting the parameters passed to the screen.
+ * @description OtpScreen component is used to verify the OTP sent to the user's email.
+ * @returns {JSX.Element} - Returns the OtpScreen component.
+ */
 const OtpScreen = ({navigation, route}: OtpScreenProps) => {
   // state
   const [otp, setOtp] = useState<string>('');
@@ -61,7 +64,13 @@ const OtpScreen = ({navigation, route}: OtpScreenProps) => {
     return () => clearInterval(interval);
   }, [timer, counter]);
 
-  //   verify handler
+  /**
+   * @function verifyHandler
+   * @description This function is used to verify the OTP entered by the user.
+   * *@returns {Promise<void>} - Returns a promise that resolves when the OTP is verified.
+   * @throws {Error} - Throws an error if the OTP verification fails.
+   * @async
+   */
   const verifyHandler = async () => {
     setIsVerifying(true);
     try {
@@ -93,7 +102,13 @@ const OtpScreen = ({navigation, route}: OtpScreenProps) => {
     navigation?.navigate('Login');
   };
 
-  // resend otp function
+  /**
+   * * @function handleResendOTPFunction
+   * * @description This function is used to resend the OTP to the user's email.
+   * * @returns {Promise<void>} - Returns a promise that resolves when the OTP is resent.
+   * * @throws {Error} - Throws an error if the OTP resend fails.
+   * * @async
+   */
   const handleResendOTPFunction = async () => {
     try {
       if (counter === 0 && id && email) {

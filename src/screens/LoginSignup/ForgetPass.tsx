@@ -1,3 +1,7 @@
+/**
+ * @file ForgetPass.tsx
+ * @description This file contains the Forget Password screen component.
+ */
 import {View, Text, TextInput, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {Formik} from 'formik';
@@ -12,23 +16,11 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {LoginSignupStore} from './helper/LoginSignupStore';
 import {SuccessToast} from '../../components/SuccessToast';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsList} from '../../navigation/AppStack';
-
-interface ResetPasswordProps {
-  email: string;
-  password: string;
-  confirmPassword?: string;
-  security_answer?: string;
-}
-
-interface LoginSignupStoreState {
-  forgotPassword: (values: ResetPasswordProps) => Promise<any>;
-}
-
-interface ForgetPassScreenProps {
-  navigation: StackNavigationProp<RootStackParamsList>;
-}
+import {
+  ForgetPassScreenProps,
+  LoginSignupStoreState,
+  ResetPasswordProps,
+} from '../../types/interfaces/IForgetPass';
 
 // Define validation schema with Yup
 const validationSchema = Yup.object().shape({
@@ -42,6 +34,13 @@ const validationSchema = Yup.object().shape({
   security_answer: Yup.string().required('Security answer is required'),
 });
 
+/**
+ *
+ * @param navigation - The navigation prop from React Navigation.
+ * @description This component renders the Forget Password screen.
+ * It allows the user to reset their password by providing their email, new password, and answering a security question.
+ * @returns {JSX.Element} - The rendered component.
+ */
 const ForgetPass = ({navigation}: ForgetPassScreenProps) => {
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
 
@@ -57,7 +56,17 @@ const ForgetPass = ({navigation}: ForgetPassScreenProps) => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  // handle signup
+  /**
+   *
+   * @param values - The values from the form.
+   * @description This function handles the form submission for resetting the password.
+   * It sends the email, new password, and security answer to the server.
+   * @returns {Promise<void>} - A promise that resolves when the submission is complete.
+   * @throws {Error} - Throws an error if the submission fails.
+   * @async
+   * @function handleSignup
+   *
+   */
   const handleSignup = async (values: ResetPasswordProps) => {
     setIsSubmitting(true);
     try {

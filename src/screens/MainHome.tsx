@@ -14,6 +14,12 @@ import {
   userStateProps,
 } from '../types/interfaces/IMainHome';
 
+/**
+ * @function MainHome
+ * @description This component checks the authentication status of the user and navigates to the appropriate screen based on their role.
+ * @param {MainHomeScreenProps} navigation - The navigation prop passed from the parent component.
+ * @returns {JSX.Element} - A loading component while checking authentication.
+ */
 const MainHome = React.memo(({navigation}: MainHomeScreenProps) => {
   useEffect(() => {
     const checkAuthentication = async () => {

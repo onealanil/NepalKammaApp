@@ -98,7 +98,7 @@ export const getItemOnboarding = async (key: string) => {
  * @returns {Promise<void>} - returns a promise that resolves to void
  * @throws {Error} - throws an error if there is an error while removing the item from async storage or keychain
  */
-export const removeItem = async (key: string) => {
+export const removeItem = async (key: string): Promise<void> => {
   try {
     await AsyncStorage.removeItem(key);
     // await Keychain.resetGenericPassword(key);
@@ -133,7 +133,7 @@ export const getTokenKeyChain = async () => {
  * @returns {Promise<void>} - returns a promise that resolves to void
  * @throws {Error} - throws an error if there is an error while removing the token from keychain
  */
-export const removeTokenKeyChain = async () => {
+export const removeTokenKeyChain = async (): Promise<void> => {
   try {
     await Keychain.resetGenericPassword(); // Clear the Keychain
   } catch (err) {

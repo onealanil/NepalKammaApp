@@ -1,3 +1,8 @@
+/**
+ * @file Signup.tsx
+ * @description This file contains the Signup component, which is responsible for rendering the signup screen of the application.
+ */
+
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
 import {
@@ -6,16 +11,18 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsList} from '../../navigation/AppStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Who from '../../components/Who';
 import SignupForm from '../../components/SignupForm';
+import {signUpScreenProps} from '../../types/interfaces/ISignUpScreenProps';
 
-interface signUpScreenProps {
-  navigation: StackNavigationProp<RootStackParamsList>;
-}
-
+/**
+ *
+ * @param navigation - The navigation prop passed from the parent component.
+ * @returns {JSX.Element} - The Signup component.
+ * @description This component renders the signup screen of the application. It allows users to select their role (job seeker or job provider) and fill out the signup form accordingly.
+ * @component
+ */
 const Signup = ({navigation}: signUpScreenProps) => {
   const [who, setWho] = useState<string>('');
 
