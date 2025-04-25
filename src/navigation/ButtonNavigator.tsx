@@ -16,11 +16,24 @@ import People from '../screens/Job_provider/Search';
 import OtherProfile from '../screens/Job_provider/OtherProfile';
 import ActualMessage from '../screens/Job_seeker/ActualMessage';
 import {useMessageStore} from '../global/MessageCount';
-import { useNotificationCount } from '../global/NotificationCount';
-
+import {useNotificationCount} from '../global/NotificationCount';
 
 const Tab = createBottomTabNavigator();
-
+/**
+ *
+ * @returns {JSX.Element} - Returns the bottom tab navigator with the screens.
+ * @description This component contains the bottom tab navigator for the app. It includes the following screens:
+ * 1. Home (JobProvider)
+ * 2. Peoples (People)
+ * 3. Create (Create)
+ * 4. Message (Message)
+ * 5. Notification (Notifications)
+ * 6. Other_Profile (OtherProfile)
+ * 7. Actual_Message (ActualMessage)
+ * @note The tab bar is hidden for the Other_Profile and Actual_Message screens.
+ * @note The tab bar badge is shown for the Message and Notification screens if there are unread messages or notifications.
+ *
+ */
 const ButtonNavigator = () => {
   const messageCount = useMessageStore(state => state.messageCount);
   const notificationCount = useNotificationCount(

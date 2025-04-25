@@ -21,6 +21,19 @@ import {useNotificationCount} from '../global/NotificationCount';
 
 const Tab = createBottomTabNavigator();
 
+/**
+ *
+ * @returns {JSX.Element} - Returns the ButtonNavigatorSeeker component which is a bottom tab navigator for the job seeker.
+ * @description This component contains the bottom tab navigator for the job seeker. It contains the following screens:
+ * - Home: JobSeeker
+ * - Explore: Explore
+ * - CreateGigs: CreateGigs
+ * - Message: Message
+ * - Notifications: Notifications
+ * - Other_Profile: OtherProfile
+ * - Actual_Message: ActualMessage
+ * @component
+ */
 const ButtonNavigatorSeeker = () => {
   const messageCount = useMessageStore(state => state.messageCount);
   const notificationCount = useNotificationCount(

@@ -18,11 +18,24 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import SavedJobs from '../screens/Job_seeker/SavedJobs';
 import MyReview from '../screens/Job_provider/MyReview';
 import ButtonNavigatorSeeker from './ButtonNavigatorSeeker';
-import { savedJobsProps } from '../types/interfaces/ISavedJobsProps';
-
+import {savedJobsProps} from '../types/interfaces/ISavedJobsProps';
 
 const Drawer = createDrawerNavigator();
 
+/**
+ *
+ * @param {bottomNavigation} - The bottom navigation prop passed to the component.
+ * @returns {JSX.Element} - The DrawerStackSeeker component.
+ * @description This component sets up a drawer navigator for the job seeker. It contains the following screens:
+ * - Home: ButtonNavigatorSeeker
+ * - My_Profile: MyProfile
+ * - My_Review: MyReview
+ * - Top_Buyer: TopBuyer
+ * - Completed Jobs: CompletedJobs
+ * - Saved Jobs: SavedJobs
+ * - Phone_Verify: PhoneVerification (invisible)
+ *
+ */
 const DrawerStackSeeker = ({bottomNavigation}: savedJobsProps) => {
   return (
     <Drawer.Navigator

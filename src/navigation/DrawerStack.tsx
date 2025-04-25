@@ -20,6 +20,18 @@ import PhoneVerification from '../screens/Job_seeker/phone_verification/PhoneVer
 
 const Drawer = createDrawerNavigator();
 
+/**
+ * 
+ * @returns {JSX.Element} - Returns the DrawerStack component which contains the drawer navigator.
+ * @description This component is used to create a drawer navigator for the app. It contains the following screens:
+ * - Home: ButtonNavigator
+ * - My_Profile: MyProfile
+ * - My_Jobs: MyJobs
+ * - Payment: CompletedJobs
+ * - Milestone: MyMileStone
+ * - Review: MyReview
+ * - Phone_Verify: PhoneVerification (invisible)
+ */
 const DrawerStack = () => {
   return (
     <Drawer.Navigator
