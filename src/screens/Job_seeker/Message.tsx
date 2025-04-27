@@ -31,9 +31,6 @@ const Message = ({navigation}: MessageProps) => {
   const [onlineUsers, setOnlineUsers] = React.useState([] as any);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-
-  console.log(socket);
-
   // In your frontend component
   React.useEffect(() => {
     const fetchOnlineUsers = () => {
@@ -72,9 +69,7 @@ const Message = ({navigation}: MessageProps) => {
   React.useEffect(() => {
     if (isFocused) {
       getConversations();
-      console.log('getConversations');
     }
-    console.log('useEffect');
   }, [isFocused, getConversations]);
 
   const readAllMessages = async (conversation_id: string) => {

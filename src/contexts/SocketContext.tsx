@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { BACKEND_URL } from '../global/config';
 import { useUserContext } from './UserContext';
 
@@ -9,13 +9,11 @@ interface SocketContextProps {
 
 const SocketContext = createContext<Socket | null>(null);
 
-export const useSocket = (): Socket | null => useContext(SocketContext);
+export const useSocket = (): Socket| null => useContext(SocketContext);
 
 export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const { currentUser } = useUserContext();
-
-  console.log("this is current user", currentUser);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -41,7 +39,6 @@ export const SocketProvider: React.FC<SocketContextProps> = ({ children }) => {
     // Enhanced logging for debugging
     const onConnect = () => {
       console.log('Socket connected with ID:', newSocket.id);
-      console.log('Authentication token sent:', currentUser);
     };
 
     const onDisconnect = (reason: string) => {

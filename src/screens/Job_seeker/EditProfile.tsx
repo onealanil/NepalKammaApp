@@ -49,7 +49,6 @@ const RenderItem = () => {
 
   const handleEditProfile = useCallback(
     async (values: editProfileProps) => {
-      console.log("Edit profile clicked: ");
       try {
         const skillsRequired = selectedItem.map(
           (index: any) => Skills_data[index - 1],

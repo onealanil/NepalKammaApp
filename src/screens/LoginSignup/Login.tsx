@@ -75,7 +75,6 @@ const Login = ({navigation}: LoginScreenProps) => {
         password: values.password,
         fcm_token: await AsyncStorage.getItem('fcm_token'),
       };
-      console.log(finalValues);
       const response = await (LoginSignupStore.getState() as any).loginUser(
         finalValues,
       );

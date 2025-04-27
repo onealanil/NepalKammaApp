@@ -50,13 +50,11 @@ const getFCMToken = async () => {
     await messaging().registerDeviceForRemoteMessages();
     // if it is still signin 
     let fcmToken = await AsyncStorage.getItem('fcm_token');
-    console.log('fcmToken:', fcmToken)
     
     if (fcmToken) {
     } else {
       //logout ---> remove fcm token and generate new one
       const token = await messaging().getToken();
-      console.log("fcm token:" ,token)
       await AsyncStorage.setItem('fcm_token', token);
     }
   } catch (error) {

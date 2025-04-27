@@ -144,7 +144,6 @@ const MyProfileComponent = React.memo(({navigation}: MyProfileProps) => {
   }, []);
 
   const updateProfilePic = async (imageData: any) => {
-    console.log("uploading the picture");
     setIsUploadingImage(true);
     try {
       if (!imageData.uri) {

@@ -65,7 +65,6 @@ const PhoneVerification = ({navigation}: PhoneVerificationProps) => {
     };
     try {
       const response = await axios.request(options);
-      console.log(response);
       if (response?.data.E164Format !== 'Invalid') {
         updatePhoneDatabase();
       } else {

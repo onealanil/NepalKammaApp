@@ -57,7 +57,6 @@ const MoreModalBox = ({
    */
   const _goToYosemite = useCallback(() => {
     if (reportedBy?.isDocumentVerified !== 'verified') {
-      console.log(reportedBy);
       ErrorToast('Please verify your document first');
       return;
     }

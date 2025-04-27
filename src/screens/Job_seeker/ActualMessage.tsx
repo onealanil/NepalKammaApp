@@ -1,3 +1,9 @@
+/**
+ * @file ActualMessage.tsx
+ * @description This file contains the ActualMessage component, which is responsible for displaying the actual message screen in the application. It includes the header, message list, and input field for sending messages.
+ * @author Anil Bhandari
+ */
+
 import {
   View,
   Text,
@@ -30,6 +36,14 @@ import {
   User,
 } from '../../types/interfaces/IActualMessage';
 
+/**
+ * 
+ * @param navigation - The navigation prop used for navigating between screens.
+ * @param route - The route prop used to access the parameters passed to this screen. 
+ * @returns {JSX.Element} - The rendered component.
+ * @description This component displays the actual message screen, including the header, message list, and input field for sending messages. It also handles socket events for real-time messaging and manages the state of messages and other user information.
+ * @component
+ */
 const ActualMessage = ({navigation, route}: ActualMessageProps) => {
   const isFocused = useIsFocused();
   const socket = useSocket();
@@ -170,8 +184,6 @@ const ActualMessage = ({navigation, route}: ActualMessageProps) => {
         msg: message,
       });
 
-      console.log(sender, message," this is from message");
-
       // Append the received message to the messages state
       setMessages((prevMessages: any) => {
         const newMessage = {
@@ -273,6 +285,16 @@ const ActualMessage = ({navigation, route}: ActualMessageProps) => {
   );
 };
 
+/**
+ * @function Messages
+ * @param data - The message data to be displayed.
+ * @param otheruser - The other user's information.
+ * @returns {JSX.Element} - The rendered message component.
+ * @description This component displays a single message in the chat. It handles the styling and layout of the message based on whether it is sent by the current user or the other user.
+ * @component
+ * @memoized - This component is memoized to prevent unnecessary re-renders.
+ * @memoizedComponent
+ */
 const Messages = React.memo(({data, otheruser}: any) => {
   const user: any = useGlobalStore((state: any) => state.user);
   const screenWidth = Dimensions.get('window').width;

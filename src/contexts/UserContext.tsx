@@ -21,7 +21,6 @@ export const UserProvider = ({children}: {children: React.ReactNode}) => {
       try {
         // Retrieve the token from Keychain
         const token = await getTokenKeyChain();
-        console.log('this is token from user context, ', token);
         if (token) {
           setCurrentUser(token); // Set the token in the context state
         } else {

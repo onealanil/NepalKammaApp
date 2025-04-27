@@ -36,13 +36,12 @@ const Message = ({navigation}: MessageProps) => {
   React.useEffect(() => {
     const fetchOnlineUsers = () => {
       socket?.emit('getOnlineUsers');
-      console.log('Requested online users');
     };
 
     const onlineUsersListener = (data: any) => {
-      console.log('Received online users:', data);
       // Ensure we have a proper array
       const formattedData = Array.isArray(data) ? data : [];
+      console.log('Online users:', formattedData);
       setOnlineUsers(formattedData);
     };
 
@@ -66,6 +65,7 @@ const Message = ({navigation}: MessageProps) => {
       const response = await (
         MessageStore.getState() as any
       ).getAllConversation();
+      console.log(response?.result[0].conversation.length, "this is the response");
       setConversations(response?.result);
     } catch (error: any) {
       const errorMessage = error
@@ -149,6 +149,7 @@ const Message = ({navigation}: MessageProps) => {
                   <MemoizedConversationItem
                     item={item}
                     onlineUsers={onlineUsers}
+                    myId={user?._id?.toString()}
                   />
                 )}
               />
@@ -186,7 +187,7 @@ const Message = ({navigation}: MessageProps) => {
                       : responsiveHeight(1),
                 }}
                 onPress={() => clickedConversationHandler(item._id.toString())}>
-                <MemoizedConversation data={item} onlineUsers={onlineUsers} />
+                <MemoizedConversation data={item} onlineUsers={onlineUsers} myId={user?._id?.toString()} />
               </TouchableOpacity>
             )}
             contentContainerStyle={{
@@ -269,81 +270,71 @@ const MemoizedConversation = memo(({data, onlineUsers}: any) => (
 //   return prevUserId === nextUserId && prevOnline === nextOnline;
 // });
 
-const MemoizedConversationItem = memo(({item, onlineUsers}: any) => (
-  <View
-    style={{
-      alignItems: 'center',
-      marginRight: responsiveWidth(4),
-    }}>
-    <FastImage
-      source={{uri: item?.conversation[0].profilePic?.url}}
-      style={{
-        width: responsiveHeight(9),
-        height: responsiveHeight(9),
-        borderRadius: 100,
-      }}
-    />
-    {isUserOnline(item, onlineUsers) ? (
-      <View
-        style={{
-          position: 'absolute',
-          right: 0,
-          bottom: 12,
-          width: responsiveHeight(2.5),
-          height: responsiveHeight(2.5),
-          borderRadius: 100,
-          backgroundColor: 'green',
-          borderWidth: 2,
-          borderColor: 'white',
-        }}
-      />
-    ) : (
-      <View
-        style={{
-          position: 'absolute',
-          right: 0,
-          bottom: 12,
-          width: responsiveHeight(2.5),
-          height: responsiveHeight(2.5),
-          borderRadius: 100,
-          backgroundColor: 'red',
-          borderWidth: 2,
-          borderColor: 'white',
-        }}
-      />
-    )}
-    <Text
-      style={{
-        marginTop: responsiveHeight(1),
-        fontFamily: 'Montserrat-Bold',
-        fontSize: responsiveFontSize(1.25),
-        color: 'black',
-      }}>
-      {item?.conversation[0]?.username}
-    </Text>
-  </View>
-));
+const MemoizedConversationItem = memo(({item, onlineUsers, myId}: any) => {
 
+  // console.log(item.conversations, "this is item");
+  // console.log("this is my id", item);
+  // Extract the user ID from the conversation item
+  const userId = item?.conversation[0]?.onlineStatus;
+  console.log(userId);
+  // const isOnline = isUserOnline(userId, onlineUsers);
+
+  for(let i = 0 ; i < 2 ; i++){
+    console.log("this is the ids", item?.conversation[i]?._id?.toString())
+  }
+
+  // console.log('Checking online status for:', {
+  //   userId,
+  //   onlineUsers,
+  //   isOnline
+  // });
+
+  return (
+    <View style={{alignItems: 'center', marginRight: responsiveWidth(4)}}>
+      <FastImage
+        source={{uri: item?.conversation[0].profilePic?.url}}
+        style={{
+          width: responsiveHeight(9),
+          height: responsiveHeight(9),
+          borderRadius: 100,
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          right: 0,
+          bottom: 12,
+          width: responsiveHeight(2.5),
+          height: responsiveHeight(2.5),
+          borderRadius: 100,
+          backgroundColor: userId ? 'green' : 'red',
+          borderWidth: 2,
+          borderColor: 'white',
+        }}
+      />
+      <Text
+        style={{
+          marginTop: responsiveHeight(1),
+          fontFamily: 'Montserrat-Bold',
+          fontSize: responsiveFontSize(1.25),
+          color: 'black',
+        }}>
+        {item?.conversation[0]?.username}
+      </Text>
+    </View>
+  );
+});
+
+// Updated to expect a userId string
 const isUserOnline = (
-  item: any,
+  userId: string | undefined | null,
   onlineUsers: any[] | undefined | null,
 ): boolean => {
-  // Check if onlineUsers is valid
+  // Early returns for invalid cases
+  if (!userId || !onlineUsers || !Array.isArray(onlineUsers)) return false;
 
-  console.log(item, onlineUsers, 'isUserOnline function called');
-  if (!onlineUsers || !Array.isArray(onlineUsers)) return false;
-
-  // Safely get the conversation user ID
-  const conversationUserId = item;
-  console.log(conversationUserId, 'conversationUserId');
-
-  // If we couldn't get a valid ID, return false
-  if (!conversationUserId) return false;
-
-  // Check if this user exists in onlineUsers
   return onlineUsers.some(onlineUser => {
-    const onlineUserId = onlineUser?.userId?.toString();
-    return onlineUserId && onlineUserId === conversationUserId;
+    return onlineUser?.userId?.toString() === userId;
   });
 };
 
