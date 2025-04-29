@@ -25,8 +25,8 @@ import Search from '../GlobalComponents/Search';
 import {ErrorToast} from '../../components/ErrorToast';
 import Geolocation from 'react-native-geolocation-service';
 import useLocationStore from '../../global/useLocationStore';
-import {myLocationProps} from '../Job_seeker/Home';
 import {useNotificationCount} from '../../global/NotificationCount';
+import { myLocationProps } from '../../types/interfaces/IHomeSeeker';
 
 interface logOutProps {
   navigation: StackNavigationProp<RootStackParamsList>;
@@ -77,13 +77,6 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const isFocused = useIsFocused();
 
-  //get all job details
-  // const getGigDetails = async () => {
-  //   const response = await (FetchGigStore.getState() as getJobProps).getGig();
-  //   setgigDetails(response);
-  //   setIsLoading(false);
-  // };
-
   //distance
   const [selectedDistance, setSelectedDistance] = React.useState(0);
 
@@ -112,6 +105,77 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
     latitude: 0,
     longitude: 0,
   });
+
+  const socket = useSocket();
+
+  /**
+   * @description This function is used to read the unread message count from the message store.
+   * @returns {Promise<void>}
+   */
+  const readUnreadMessage = useCallback(async () => {
+    await (useMessageStore.getState() as any).unreadMessageCount();
+  }, []);
+
+  /**
+   * @description This function is used to read the unread notification count from the notification store.
+   * @returns {Promise<void>}
+   */
+  const readUnreadNotification = useCallback(async () => {
+    await (useNotificationCount.getState() as any).unreadNotification();
+  }, []);
+
+  /**
+   * @description This function is used to read the unread notification count from the notification store.
+   * @returns {Promise<void>}
+   */
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit('addUser', {username: user?.username, userId: user?._id});
+    }
+  }, [socket, user]);
+
+  useEffect(() => {
+    /**
+     *
+     * @param newNotification - new notification object
+     * @description This function is used to listen for new notifications from the socket and update the notification count in the notification store.
+     * @returns {Promise<void>}
+     */
+    const messageListener = async (newNotification: any) => {
+      useNotificationCount.setState(state => ({
+        notificationCount: state.notificationCount + 1,
+      }));
+    };
+
+    socket?.on('notificationForLocationAndRecommend', messageListener);
+
+    return () => {
+      socket?.off('notificationForLocationAndRecommend', messageListener);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    /**
+     *
+     * @param sender - sender object
+     * @param message - message object
+     * @param conversationId - conversation id
+     * @description This function is used to listen for new messages from the socket and update the message count in the message store.
+     * @returns {Promise<void>}
+     */
+    const messageListener = ({sender, message, conversationId}: any) => {
+      useMessageStore.setState(state => ({
+        messageCount: state.messageCount + 1,
+      }));
+    };
+
+    socket?.on('textMessageFromBack', messageListener);
+
+    return () => {
+      socket?.off('textMessageFromBack', messageListener);
+    };
+  }, [socket]);
 
   // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -239,13 +303,6 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
     }
   }, [searchGig, getNearbyGig, setLocation]);
 
-  const readUnreadMessage = useCallback(async () => {
-    await (useMessageStore.getState() as any).unreadMessageCount();
-  }, []);
-
-  const readUnreadNotification = useCallback(async () => {
-    await (useNotificationCount.getState() as any).unreadNotification();
-  }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -259,45 +316,6 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
     readUnreadNotification,
     requestLocationPermission,
   ]);
-
-  const socket = useSocket();
-
-  useEffect(() => {
-    if (socket) {
-      socket?.emit('addUser', {
-        username: user?.username,
-        userId: user?._id,
-      });
-    }
-  }, [socket, user?.username, user?._id]);
-
-  useEffect(() => {
-    const messageListener = async (newNotification: any) => {
-      useNotificationCount.setState(state => ({
-        notificationCount: state.notificationCount + 1,
-      }));
-    };
-
-    socket?.on('notificationForLocationAndRecommend', messageListener);
-
-    return () => {
-      socket?.off('notificationForLocationAndRecommend', messageListener);
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    const messageListener = ({sender, message, conversationId}: any) => {
-      useMessageStore.setState(state => ({
-        messageCount: state.messageCount + 1,
-      }));
-    };
-
-    socket?.on('textMessageFromBack', messageListener);
-
-    return () => {
-      socket?.off('textMessageFromBack', messageListener);
-    };
-  }, [socket]);
 
   const handleOkFunction = useCallback(() => {
     setModalVisible(false);

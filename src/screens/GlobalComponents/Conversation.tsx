@@ -48,6 +48,7 @@ const Conversation = ({data}: any) => {
 
   const messageListener = useCallback(
     ({sender, message, conversationId}: any) => {
+      console.log("this is whhat", sender, message, conversationId);
       if (conversationId === data?._id) {
         // Append the received message to the messages state
         setLastMessage((prevMessages: any) => {

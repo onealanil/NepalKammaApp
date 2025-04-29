@@ -46,7 +46,7 @@ const Message = ({navigation}: MessageProps) => {
     };
 
     fetchOnlineUsers();
-    socket?.on('getOnlineUsers', onlineUsersListener);
+    socket?.on('getU', onlineUsersListener);
 
     // Add error handling
     socket?.on('connect_error', (err: any) => {
@@ -54,7 +54,7 @@ const Message = ({navigation}: MessageProps) => {
     });
 
     return () => {
-      socket?.off('getOnlineUsers', onlineUsersListener);
+      socket?.off('getU', onlineUsersListener);
       socket?.off('connect_error');
     };
   }, [socket]);
@@ -65,7 +65,10 @@ const Message = ({navigation}: MessageProps) => {
       const response = await (
         MessageStore.getState() as any
       ).getAllConversation();
-      console.log(response?.result[0].conversation.length, "this is the response");
+      console.log(
+        response?.result[0].conversation.length,
+        'this is the response',
+      );
       setConversations(response?.result);
     } catch (error: any) {
       const errorMessage = error
@@ -81,7 +84,7 @@ const Message = ({navigation}: MessageProps) => {
     if (isFocused) {
       getConversations();
     }
-  }, [getConversations]);
+  }, [getConversations, onlineUsers]);
 
   const readAllMessages = useCallback(async (conversation_id: string) => {
     try {
@@ -187,7 +190,9 @@ const Message = ({navigation}: MessageProps) => {
                       : responsiveHeight(1),
                 }}
                 onPress={() => clickedConversationHandler(item._id.toString())}>
-                <MemoizedConversation data={item} onlineUsers={onlineUsers} myId={user?._id?.toString()} />
+                <MemoizedConversation
+                  data={item}
+                />
               </TouchableOpacity>
             )}
             contentContainerStyle={{
@@ -215,7 +220,7 @@ const Message = ({navigation}: MessageProps) => {
 };
 
 const MemoizedConversation = memo(({data, onlineUsers}: any) => (
-  <Conversation data={data} onlineUsers={onlineUsers} />
+  <Conversation data={data} />
 ));
 
 // const MemoizedConversationItem = memo(({item, onlineUsers}: any) => {
@@ -271,16 +276,18 @@ const MemoizedConversation = memo(({data, onlineUsers}: any) => (
 // });
 
 const MemoizedConversationItem = memo(({item, onlineUsers, myId}: any) => {
+  // console.log('this is online users', onlineUsers);
+  // console.log('this is the item', item);
 
   // console.log(item.conversations, "this is item");
   // console.log("this is my id", item);
   // Extract the user ID from the conversation item
-  const userId = item?.conversation[0]?.onlineStatus;
-  console.log(userId);
+  // const userId = item?.conversation[0]?.onlineStatus;
+  // console.log(userId);
   // const isOnline = isUserOnline(userId, onlineUsers);
 
-  for(let i = 0 ; i < 2 ; i++){
-    console.log("this is the ids", item?.conversation[i]?._id?.toString())
+  for (let i = 0; i < 2; i++) {
+    console.log('this is the ids', item?.conversation[i]?._id?.toString());
   }
 
   // console.log('Checking online status for:', {
@@ -299,19 +306,37 @@ const MemoizedConversationItem = memo(({item, onlineUsers, myId}: any) => {
           borderRadius: 100,
         }}
       />
-      <View
-        style={{
-          position: 'absolute',
-          right: 0,
-          bottom: 12,
-          width: responsiveHeight(2.5),
-          height: responsiveHeight(2.5),
-          borderRadius: 100,
-          backgroundColor: userId ? 'green' : 'red',
-          borderWidth: 2,
-          borderColor: 'white',
-        }}
-      />
+      {onlineUsers?.find(
+        (u: any) => u?.userId === item?.conversation[0]?._id,
+      ) ? (
+        <View
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 12,
+            width: responsiveHeight(2.5),
+            height: responsiveHeight(2.5),
+            borderRadius: 100,
+            backgroundColor: 'green',
+            borderWidth: 2,
+            borderColor: 'white',
+          }}
+        />
+      ) : (
+        <View
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 12,
+            width: responsiveHeight(2.5),
+            height: responsiveHeight(2.5),
+            borderRadius: 100,
+            backgroundColor: 'red',
+            borderWidth: 2,
+            borderColor: 'white',
+          }}
+        />
+      )}
       <Text
         style={{
           marginTop: responsiveHeight(1),

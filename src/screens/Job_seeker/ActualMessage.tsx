@@ -178,7 +178,9 @@ const ActualMessage = ({navigation, route}: ActualMessageProps) => {
   }, []);
 
   const messageListener = useCallback(
-    ({sender, message}: any) => {
+    ({sender,reciever, message, conversationId}: any) => {
+
+      console.log("this is the message", message, conversationId, sender);
       setArrivalMessage({
         sender: sender,
         msg: message,
