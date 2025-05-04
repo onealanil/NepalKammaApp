@@ -3,7 +3,14 @@
  * @description This file contains the Login component which is used for user authentication.
  */
 
-import {View, Text, TouchableOpacity, TextInput, Image} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import {removeItem, setToken} from '../../utils/asyncStorage';
 import {
   responsiveFontSize,
@@ -224,18 +231,25 @@ const Login = ({navigation}: LoginScreenProps) => {
               </TouchableOpacity>
               <View>
                 <View className="w-[100%] bg-color2 flex items-center justify-center rounded-md">
-                  <TouchableOpacity onPress={() => handleSubmit()}>
-                    <Text
-                      className="text-white"
-                      style={{
-                        paddingVertical: responsiveHeight(1.75),
-                        paddingHorizontal: responsiveWidth(2),
-                        fontFamily: 'Montserrat-Bold',
-                        fontSize: responsiveFontSize(2.25),
-                      }}>
-                      {isLoggingIn ? 'Logging in...' : 'Log in'}
-                    </Text>
-                  </TouchableOpacity>
+                  {isLoggingIn ? (
+                    <ActivityIndicator size="small" color="#00ff00" style={{
+                      paddingVertical: responsiveHeight(1.75),
+                      paddingHorizontal: responsiveWidth(2),
+                    }} />
+                  ) : (
+                    <TouchableOpacity onPress={() => handleSubmit()}>
+                      <Text
+                        className="text-white"
+                        style={{
+                          paddingVertical: responsiveHeight(1.75),
+                          paddingHorizontal: responsiveWidth(2),
+                          fontFamily: 'Montserrat-Bold',
+                          fontSize: responsiveFontSize(2.25),
+                        }}>
+                        Log In
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
               <View className="flex flex-row items-center justify-center gap-x-1">

@@ -3,7 +3,7 @@
  * @description This file contains the OtpScreen component which is used to verify the OTP sent to the user's email.
  */
 
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {
   responsiveFontSize,
@@ -219,18 +219,25 @@ const OtpScreen = ({navigation, route}: OtpScreenProps) => {
           </View>
           {/* button  */}
           <View className="w-[100%] bg-color2 flex items-center justify-center rounded-md">
-            <TouchableOpacity onPress={verifyHandler}>
-              <Text
-                className="text-white tracking-widest"
-                style={{
-                  paddingVertical: responsiveHeight(1.75),
-                  paddingHorizontal: responsiveWidth(2),
-                  fontFamily: 'Montserrat-Bold',
-                  fontSize: responsiveFontSize(2.25),
-                }}>
-                {isVerifying ? 'Verifying...' : 'Verify'}
-              </Text>
-            </TouchableOpacity>
+            {isVerifying ? (
+              <ActivityIndicator size="small" color="#00ff00" style={{
+                paddingVertical: responsiveHeight(1.75),
+                paddingHorizontal: responsiveWidth(2),
+              }}/>
+            ) : (
+              <TouchableOpacity onPress={verifyHandler}>
+                <Text
+                  className="text-white tracking-widest"
+                  style={{
+                    paddingVertical: responsiveHeight(1.75),
+                    paddingHorizontal: responsiveWidth(2),
+                    fontFamily: 'Montserrat-Bold',
+                    fontSize: responsiveFontSize(2.25),
+                  }}>
+                  Verify
+                </Text> 
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>

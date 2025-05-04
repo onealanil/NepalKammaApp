@@ -14,6 +14,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {ErrorToast} from '../../components/ErrorToast';
 const systemFonts = [
   ...defaultSystemFonts,
   'Montserrat-Regular',
@@ -35,6 +36,10 @@ const BottonSheetEditorSeeker = ({
   const {width} = useWindowDimensions();
 
   const handleSubmitOkay = () => {
+    if (text.trim().length < 300) {
+      ErrorToast('Description must be at least 300 characters long.');
+      return;
+    }
     setGigDescription(text);
     bottomSheetModalRef.current?.close();
   };
@@ -80,7 +85,7 @@ const BottonSheetEditorSeeker = ({
 
   return (
     <ScrollView>
-      <View className="w-[100%] flex flex-row items-center justify-between">
+      <View className="w-[80%] flex flex-row items-center justify-between">
         <View
           className="flex flex-row"
           style={{
@@ -166,16 +171,15 @@ const BottonSheetEditorSeeker = ({
           {'  '} Click Above Text area and scroll Up
         </Text>
       </Text>
-      <RenderHtml
-        contentWidth={width}
-        source={{html: generateHtmlPreview()}}
-        baseStyle={{color: 'black', fontFamily: 'Montserrat-SemiBold'}}
-        // tagsStyles={{
-        //   p: {color: 'red', fontFamily: 'Montserrat-Bold'},
-        // }}
-        systemFonts={systemFonts}
-      />
-      <View className="w-[80%] flex items-center">
+      <View style={{width: '90%', alignSelf: 'center'}}>
+        <RenderHtml
+          contentWidth={width * 0.9} // match content width with visual width
+          source={{html: generateHtmlPreview()}}
+          baseStyle={{color: 'black', fontFamily: 'Montserrat-SemiBold'}}
+          systemFonts={systemFonts}
+        />
+      </View>
+      <View className="w-[100%] flex justify-center items-center">
         <TouchableOpacity
           className="w-[90%] bg-color2 flex items-center justify-center rounded-md"
           onPress={() => handleSubmitOkay()}

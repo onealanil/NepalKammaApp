@@ -1,11 +1,14 @@
-import {
-  View,
-  Text,
-  Image,
-  useWindowDimensions,
-  TouchableOpacity,
-} from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+/**
+ * @file Cards.tsx
+ * @description This file contains the Cards component which is used to display job cards in the application.
+ * It includes the job title, description, location, and other details. It also includes functionality to update job status, delete job, and pay for the job.
+ * It uses various libraries such as react-native-vector-icons, react-native-responsive-dimensions, and react-native-render-html.
+ * It also uses the JobStore and ReviewStore for managing job and review data respectively.
+ * It uses the Khalti component for payment processing and PayModal for offline payment processing.
+ */
+
+import {View, Text, useWindowDimensions, TouchableOpacity, ActivityIndicator} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -17,13 +20,13 @@ import {
 } from 'react-native-responsive-dimensions';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
+import RenderHtml, {defaultSystemFonts} from 'react-native-render-html';
 import ModalBoxJob from '../../components/ModalBoxJob';
-import { JobStore } from '../Job_provider/helper/JobStore';
-import { ErrorToast } from '../../components/ErrorToast';
-import { SuccessToast } from '../../components/SuccessToast';
+import {JobStore} from '../Job_provider/helper/JobStore';
+import {ErrorToast} from '../../components/ErrorToast';
+import {SuccessToast} from '../../components/SuccessToast';
 import Khalti from './Khalti';
-import { ReviewStore } from '../Job_seeker/helper/ReviewStore';
+import {ReviewStore} from '../Job_seeker/helper/ReviewStore';
 import FastImage from 'react-native-fast-image';
 import PayModal from '../../components/PayModal';
 export const systemFonts = [
@@ -34,6 +37,16 @@ export const systemFonts = [
   'Montserrat-Medium',
 ];
 
+/**
+ * @function Cards
+ * @param data - The data object containing job details.
+ * @param user - The user object containing user details.
+ * @param useCase - The use case for the component (e.g., 'myProfile').
+ * @param getButton - The button type to be displayed (e.g., 'getPayment').
+ * @param getSingleUser - Function to get single user details.
+ * @param getCompletedJob - Function to get completed job details.
+ * @description This component renders a card with job details and provides functionality to update job status, delete job, and pay for the job. * @returns JSX.Element - Renders the Cards component.
+ */
 const Cards = ({
   data,
   user,
@@ -42,7 +55,7 @@ const Cards = ({
   getSingleUser,
   getCompletedJob,
 }: any) => {
-  const { width } = useWindowDimensions();
+  const {width} = useWindowDimensions();
 
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] =
@@ -58,20 +71,28 @@ const Cards = ({
   const [isFetchAverageRating, setIsFetchAverageRating] =
     React.useState<boolean>(false);
   const [isPostSaved, setIsPostSaved] = React.useState<boolean>(false);
+  const [isDeletedLoading, setIsDeletedLoading] =
+    React.useState<boolean>(false);
 
+  /**
+   * @function generateHtmlPreview
+   * @description Generates HTML preview of the job description based on the use case and user role.
+   */
   const generateHtmlPreview = useCallback(() => {
     if (useCase === 'myProfile') {
-      let html = `<p style="color: black;">${user && user?.role === 'job_seeker'
-        ? data?.gig_description
-        : data?.job_description
-        }</p>`;
+      let html = `<p style="color: black;">${
+        user && user?.role === 'job_seeker'
+          ? data?.gig_description
+          : data?.job_description
+      }</p>`;
       html = html.replace(/\n/g, '<br/>');
       return html;
     } else {
-      let html = `<p style="color: black;">${user && user?.role === 'job_seeker'
-        ? data?.job_description
-        : data?.gig_description
-        }</p>`;
+      let html = `<p style="color: black;">${
+        user && user?.role === 'job_seeker'
+          ? data?.job_description
+          : data?.gig_description
+      }</p>`;
       html = html.replace(/\n/g, '<br/>');
       return html;
     }
@@ -83,11 +104,17 @@ const Cards = ({
     }
   }, [user, data?._id]);
 
-  //update job status
+  /**
+   * * @function updateJobStatus
+   * * @description Updates the job status and fetches the single user details.
+   * * @param {string} id - The job ID.
+   * * @param {string} job_status - The new job status.
+   * * @param {string} selectedUserId - The selected user ID.
+   */
   const updateJobStatus = useCallback(
     async (id: string, job_status: string, selectedUserId: string) => {
       try {
-        const response = await (JobStore.getState() as any).EditJobStatus(
+        await (JobStore.getState() as any).EditJobStatus(
           id,
           job_status,
           selectedUserId ? selectedUserId : null,
@@ -105,7 +132,11 @@ const Cards = ({
     [getSingleUser, user],
   );
 
-  // handle ok function
+  /**
+   * * @function handleOkFunction
+   * * @description Handles the OK button click in the modal and updates the job status.
+   * * @returns {void}
+   */
   const handleOkFunction = useCallback(() => {
     updateJobStatus(data?._id, selectedStatus, selectedUsers[0]?._id);
     setIsModalVisible(false);
@@ -128,6 +159,11 @@ const Cards = ({
     setIsFetchAverageRating(false);
   }, []);
 
+  /**
+   * * @function renderStars
+   * * @description Renders the star rating based on the average rating.
+   * * @returns {JSX.Element[]}
+   */
   const renderStars = useCallback(() => {
     const stars = [];
 
@@ -149,20 +185,27 @@ const Cards = ({
     }
   }, [data, fetchAverageRating]);
 
+  /**
+   * @function deleteJobHandler
+   * @param jobId - The ID of the job to be deleted.
+   * @description Deletes the job and fetches the single user details.
+   * @returns {Promise<void>}
+   */
   const deleteJobHandler = async (jobId: string) => {
+    setIsDeletedLoading(true);
     try {
       const response = await (JobStore.getState() as any).deleteJob(jobId);
       getSingleUser(user?._id);
       SuccessToast(response.message);
-    }
-    catch (error: any) {
+    } catch (error: any) {
       const errorMessage = error
         .toString()
         .replace('[Error: ', '')
         .replace(']', '');
       ErrorToast(errorMessage);
     }
-  }
+    setIsDeletedLoading(false);
+  };
 
   return (
     <View className="p-4 shadow-2xl flex flex-col bg-white">
@@ -172,13 +215,19 @@ const Cards = ({
           {data && data?.postedBy?.profilePic?.url && (
             <View className="relative">
               <FastImage
-                source={{ uri: data?.postedBy?.profilePic.url }}
-                style={{ height: 40, width: 40, borderRadius: 40 }}
+                source={{
+                  uri:
+                    typeof data.postedBy.profilePic.url === 'string'
+                      ? data.postedBy.profilePic.url
+                      : data.postedBy.profilePic,
+                }}
+                style={{height: 40, width: 40, borderRadius: 40}}
                 className="relative"
               />
               <View
-                className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border border-white ${data?.postedBy?.onlineStatus ? 'bg-green-500' : 'bg-red-500'
-                  }`}
+                className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border border-white ${
+                  data?.postedBy?.onlineStatus ? 'bg-green-500' : 'bg-red-500'
+                }`}
               />
             </View>
           )}
@@ -259,7 +308,7 @@ const Cards = ({
             </View>
           ) : (
             <View className="flex flex-row gap-x-2">
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'row'}}>
                 {isFetchAverageRating ? (
                   <Text className="text-color2">Loading...</Text>
                 ) : (
@@ -274,16 +323,21 @@ const Cards = ({
         className=""
         style={{
           width: responsiveWidth(82.75),
+          height:
+            user?.role === 'job_provider'
+              ? responsiveHeight(15.3)
+              : responsiveHeight(21.85),
         }}>
         <RenderHtml
           contentWidth={width}
-          source={{ html: generateHtmlPreview() }}
+          source={{html: generateHtmlPreview()}}
           baseStyle={{
             color: 'black',
             fontFamily: 'Montserrat-Regular',
             fontSize: responsiveFontSize(1.5),
             lineHeight: 18.5,
-            height: responsiveHeight(21.85),
+
+            // height: responsiveHeight(21.85),
           }}
           // tagsStyles={{
           //   p: {color: 'red', fontFamily: 'Montserrat-Bold'},
@@ -368,41 +422,36 @@ const Cards = ({
               </View>
             )}
 
-          {
-            data && data?.visibility === "private" && (
-              <View className="py-2 px-4 my-2 bg-gray-100 rounded-md flex flex-row items-center gap-x-1 w-[90%]">
-                <MaterialIcons name="lock" size={17} color="black" />
-                <Text
-                  className="text-black"
-                  style={{
-                    fontFamily: 'Montserrat-SemiBold',
-                    fontSize: responsiveHeight(1.5),
-                  }}>
-                  Expired
-                </Text>
-              </View>
-            )
-          }
+          {data && data?.visibility === 'private' && (
+            <View className="py-2 px-4 my-2 bg-gray-100 rounded-md flex flex-row items-center gap-x-1 w-[90%]">
+              <MaterialIcons name="lock" size={17} color="black" />
+              <Text
+                className="text-black"
+                style={{
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontSize: responsiveHeight(1.5),
+                }}>
+                Expired
+              </Text>
+            </View>
+          )}
           <View className="flex flex-row justify-between gap-x-3 items-center w-[90%]">
-            {
-              data && data?.visibility === "public" && (
-
-                <TouchableOpacity>
-                  <View className="py-2 px-4 bg-color2 rounded-md flex flex-row items-center gap-x-1">
-                    <FontAwesome name="edit" size={17} color="white" />
-                    <Text
-                      className=""
-                      style={{
-                        fontFamily: 'Montserrat-SemiBold',
-                        fontSize: responsiveHeight(1.5),
-                        color: 'white',
-                      }}>
-                      Edit
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )
-            }
+            {data && data?.visibility === 'public' && (
+              <TouchableOpacity>
+                <View className="py-2 px-4 bg-color2 rounded-md flex flex-row items-center gap-x-1">
+                  <FontAwesome name="edit" size={17} color="white" />
+                  <Text
+                    className=""
+                    style={{
+                      fontFamily: 'Montserrat-SemiBold',
+                      fontSize: responsiveHeight(1.5),
+                      color: 'white',
+                    }}>
+                    Edit
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
 
             {/* set job done */}
             {data && data?.job_status === 'In_Progress' && (
@@ -421,82 +470,93 @@ const Cards = ({
                 </View>
               </TouchableOpacity>
             )}
-            {data && data?.job_status === 'Completed' && data?.visibility === "public" && (
-              <TouchableOpacity>
-                <View className="py-2 px-3 w-[120px] bg-[#589458] rounded-md flex flex-row items-center gap-x-1">
-                  <MaterialIcons name="check" size={17} color="white" />
-                  <Text
-                    className=""
-                    style={{
-                      fontFamily: 'Montserrat-SemiBold',
-                      fontSize: responsiveHeight(1.5),
-                      color: 'white',
-                    }}>
-                    {data?.job_status}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
+            {data &&
+              data?.job_status === 'Completed' &&
+              data?.visibility === 'public' && (
+                <TouchableOpacity>
+                  <View className="py-2 px-3 w-[120px] bg-[#589458] rounded-md flex flex-row items-center gap-x-1">
+                    <MaterialIcons name="check" size={17} color="white" />
+                    <Text
+                      className=""
+                      style={{
+                        fontFamily: 'Montserrat-SemiBold',
+                        fontSize: responsiveHeight(1.5),
+                        color: 'white',
+                      }}>
+                      {data?.job_status}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
 
             {/* paid  */}
-            {data && data?.job_status === 'Paid' && data?.visibility === "public" && (
-              <TouchableOpacity>
-                <View className="py-2 px-3 w-[120px] bg-[#589458] rounded-md flex flex-row items-center gap-x-1">
-                  <MaterialIcons name="paid" size={17} color="white" />
-                  <Text
-                    className=""
-                    style={{
-                      fontFamily: 'Montserrat-SemiBold',
-                      fontSize: responsiveHeight(1.5),
-                      color: 'white',
-                    }}>
-                    {data?.job_status}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
+            {data &&
+              data?.job_status === 'Paid' &&
+              data?.visibility === 'public' && (
+                <TouchableOpacity>
+                  <View className="py-2 px-3 w-[120px] bg-[#589458] rounded-md flex flex-row items-center gap-x-1">
+                    <MaterialIcons name="paid" size={17} color="white" />
+                    <Text
+                      className=""
+                      style={{
+                        fontFamily: 'Montserrat-SemiBold',
+                        fontSize: responsiveHeight(1.5),
+                        color: 'white',
+                      }}>
+                      {data?.job_status}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
 
-            {data && data?.job_status === 'Cancelled' && data?.visibility === "public" && (
-              <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-                <View className="py-2 px-3 w-[120px] bg-[#FF0000] rounded-md flex flex-row items-center gap-x-1">
-                  <Entypo name="cross" size={17} color="white" />
-                  <Text
-                    className=""
-                    style={{
-                      fontFamily: 'Montserrat-SemiBold',
-                      fontSize: responsiveHeight(1.5),
-                      color: 'white',
-                    }}>
-                    {data?.job_status}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-            {data && data?.job_status === 'Pending' && data?.visibility === "public" && (
-              <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-                <View className="py-2 px-3 w-[120px] bg-yellow-600 rounded-md flex flex-row items-center gap-x-1">
-                  <MaterialIcons
-                    name="pending-actions"
-                    size={17}
-                    color="white"
-                  />
-                  <Text
-                    className=""
-                    style={{
-                      fontFamily: 'Montserrat-SemiBold',
-                      fontSize: responsiveHeight(1.5),
-                      color: 'white',
-                    }}>
-                    {data?.job_status}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
+            {data &&
+              data?.job_status === 'Cancelled' &&
+              data?.visibility === 'public' && (
+                <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                  <View className="py-2 px-3 w-[120px] bg-[#FF0000] rounded-md flex flex-row items-center gap-x-1">
+                    <Entypo name="cross" size={17} color="white" />
+                    <Text
+                      className=""
+                      style={{
+                        fontFamily: 'Montserrat-SemiBold',
+                        fontSize: responsiveHeight(1.5),
+                        color: 'white',
+                      }}>
+                      {data?.job_status}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            {data &&
+              data?.job_status === 'Pending' &&
+              data?.visibility === 'public' && (
+                <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                  <View className="py-2 px-3 w-[120px] bg-yellow-600 rounded-md flex flex-row items-center gap-x-1">
+                    <MaterialIcons
+                      name="pending-actions"
+                      size={17}
+                      color="white"
+                    />
+                    <Text
+                      className=""
+                      style={{
+                        fontFamily: 'Montserrat-SemiBold',
+                        fontSize: responsiveHeight(1.5),
+                        color: 'white',
+                      }}>
+                      {data?.job_status}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
 
             {/* delte  */}
             <TouchableOpacity onPress={() => deleteJobHandler(data?._id)}>
               <View className="py-2 px-4 bg-red-500 rounded-md flex flex-row items-center gap-x-1">
                 <MaterialCommunityIcons name="delete" size={17} color="white" />
+                {isDeletedLoading ? (
+                  <ActivityIndicator size="small" color="#00ff00" />
+                ) : (
                 <Text
                   className=""
                   style={{
@@ -506,6 +566,7 @@ const Cards = ({
                   }}>
                   Delete
                 </Text>
+                )}
               </View>
             </TouchableOpacity>
           </View>

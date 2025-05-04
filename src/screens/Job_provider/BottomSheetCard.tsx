@@ -1,3 +1,7 @@
+/**
+ * @file BottomSheetCard.tsx
+ */
+
 import {
   View,
   Text,
@@ -21,15 +25,14 @@ import Review from '../GlobalComponents/Review';
 import RenderHTML from 'react-native-render-html';
 import {systemFonts} from '../GlobalComponents/Cards';
 import {useGlobalStore} from '../../global/store';
-import {userStateProps} from '../Job_seeker/Home';
 import {ReviewStore} from '../Job_seeker/helper/ReviewStore';
 import {ErrorToast} from '../../components/ErrorToast';
 import Rating from '../GlobalComponents/Rating';
 import {NotificationStore} from '../Job_seeker/helper/NotificationStore';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {FlashList} from '@shopify/flash-list';
 import FastImage from 'react-native-fast-image';
 import MapModal from '../GlobalComponents/MapModal';
+import { userStateProps } from '../../types/HomeSeekerTypes';
 
 const BottomSheetCard = ({bottomSheetModalRef, data, navigation}: any) => {
   const user: userStateProps = useGlobalStore((state: any) => state.user);
@@ -282,7 +285,7 @@ const BottomSheetCard = ({bottomSheetModalRef, data, navigation}: any) => {
             Skills
           </Text>
 
-          <View style={{height: 50, width: 130}}>
+          <View style={{height: 50, width: responsiveWidth(90)}}>
             <FlashList
               estimatedItemSize={100}
               horizontal={true}

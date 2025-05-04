@@ -2,7 +2,13 @@
  * @file SignupForm.tsx
  * @description This file contains the SignupForm component which is used for user registration.
  */
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -49,7 +55,7 @@ const validationSchema = Yup.object().shape({
 const SignupForm = ({role, navigation}: SignupFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [gender, setGender] = React.useState<string>('');
+  const [gender, setGender] = React.useState<string>('male');
   const [responseMessage, setResponseMessage] = useState<string>('');
   const [otpDetails, setOtpDetails] = useState<any>({
     userId: '',
@@ -326,24 +332,38 @@ const SignupForm = ({role, navigation}: SignupFormProps) => {
               </Picker>
             </View>
             {/* Add a submit button */}
-            <View>
-              <TouchableOpacity
-                onPress={() => handleSubmit()}
-                activeOpacity={0.8}>
-                <View className="w-[100%] bg-color2 flex items-center justify-center rounded-md">
-                  <Text
-                    className="text-white"
-                    style={{
+            {isSubmitting ? (
+              <View>
+                <TouchableOpacity
+                  activeOpacity={0.8}>
+                  <View className="w-[100%] bg-color2 flex items-center justify-center rounded-md">
+                    <ActivityIndicator size="small" color="#00ff00" style={{
                       paddingVertical: responsiveHeight(1.75),
                       paddingHorizontal: responsiveWidth(2),
-                      fontFamily: 'Montserrat-Bold',
-                      fontSize: responsiveFontSize(2.25),
-                    }}>
-                    {isSubmitting ? 'Signing Up...' : 'Sign Up'}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+                    }} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View>
+                <TouchableOpacity
+                  onPress={() => handleSubmit()}
+                  activeOpacity={0.8}>
+                  <View className="w-[100%] bg-color2 flex items-center justify-center rounded-md">
+                    <Text
+                      className="text-white"
+                      style={{
+                        paddingVertical: responsiveHeight(1.75),
+                        paddingHorizontal: responsiveWidth(2),
+                        fontFamily: 'Montserrat-Bold',
+                        fontSize: responsiveFontSize(2.25),
+                      }}>
+                      Sign Up
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
           <ModalBox
             isModalVisible={isModalVisible}

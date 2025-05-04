@@ -1,3 +1,8 @@
+/**
+ * @file CustomDrawerSeeker.tsx
+ * @description This file contains the CustomDrawerSeeker component, which is a custom drawer for the job seeker. It includes user information, a list of navigation items, and a logout button. The component uses React Native's ImageBackground, TouchableOpacity, and FastImage for rendering the UI.
+ * @author Anil Bhandari
+ */
 import React from 'react';
 import {
   View,
@@ -5,6 +10,7 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {
   DrawerContentComponentProps,
@@ -19,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSocket} from '../../../contexts/SocketContext';
 import FastImage from 'react-native-fast-image';
 import {UserStore} from '../helper/UserStore';
+import {removeItem, removeTokenKeyChain} from '../../../utils/asyncStorage';
 
 type userStateProps = {
   __v: number;
@@ -33,6 +40,12 @@ type userStateProps = {
   totalIncome: number;
 };
 
+/**
+ * @function CustomDrawerSeeker
+ * @description This component renders a custom drawer for the job seeker. It includes user information, a list of navigation items, and a logout button. The component uses React Native's ImageBackground, TouchableOpacity, and FastImage for rendering the UI.
+ * @param props - The props passed to the component, including navigation and user information.
+ * @returns {JSX.Element} - The CustomDrawerSeeker component.
+ */
 const CustomDrawerSeeker = (props: DrawerContentComponentProps) => {
   const {navigation} = props;
   const socket = useSocket();
@@ -43,8 +56,11 @@ const CustomDrawerSeeker = (props: DrawerContentComponentProps) => {
     setIsLoggingOut(true);
     const res = await (UserStore.getState() as any).logOut();
     if (res) {
-      await AsyncStorage.removeItem('currentUser');
-      await AsyncStorage.removeItem('fcm_token');
+      await Promise.all([
+        removeItem('currentUser'),
+        removeTokenKeyChain(),
+        AsyncStorage.removeItem('fcm_token'),
+      ]);
       useGlobalStore.setState({user: null});
 
       await socket?.emit('removeUser', socket.id);
@@ -133,16 +149,7 @@ const CustomDrawerSeeker = (props: DrawerContentComponentProps) => {
             style={{paddingVertical: 15}}
             className="bg-color2 rounded-lg">
             <View className="flex flex-row items-center justify-center">
-              <Ionicons name="exit-outline" size={25} color="white" />
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontFamily: 'Montserrat-SemiBold',
-                  marginLeft: 5,
-                }}
-                className="text-white">
-                Signing Out...
-              </Text>
+              <ActivityIndicator size="small" color="#00ff00" />
             </View>
           </TouchableOpacity>
         ) : (

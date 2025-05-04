@@ -531,7 +531,7 @@ const OtherProfileRenderer = React.memo(
               Skills
             </Text>
             <View>
-              <View style={{height: 50, width: 130}}>
+              <View style={{height: 50, width: responsiveWidth(90)}}>
                 <FlashList
                   estimatedItemSize={100}
                   horizontal={true}

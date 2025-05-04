@@ -1,9 +1,15 @@
+/**
+ * @format
+ * @flow strict-local
+ * @file Home.tsx
+ * @description This file contains the Home screen component for the Job Provider.
+ * It displays the list of gigs and allows the user to search for gigs based on various criteria.
+ * @author Anil Bhandari
+ */
 import {View, Text, TouchableOpacity, PermissionsAndroid} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import React, {useCallback, useEffect, useMemo, useRef, memo} from 'react';
 import {useGlobalStore} from '../../global/store';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsList} from '../../navigation/AppStack';
 import TopNav from '../GlobalComponents/TopNav';
 import {
   responsiveFontSize,
@@ -16,8 +22,6 @@ import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import BottomSheetCard from './BottomSheetCard';
 import {FetchGigStore} from './helper/FetchGigStore';
 import CardLoader from '../GlobalComponents/Loader/CardLoader';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import {BottomStackParamsList} from '../../navigation/ButtonNavigator';
 import {useSocket} from '../../contexts/SocketContext';
 import {useMessageStore} from '../../global/MessageCount';
 import {useIsFocused} from '@react-navigation/native';
@@ -27,48 +31,13 @@ import Geolocation from 'react-native-geolocation-service';
 import useLocationStore from '../../global/useLocationStore';
 import {useNotificationCount} from '../../global/NotificationCount';
 import { myLocationProps } from '../../types/interfaces/IHomeSeeker';
+import { GigData, initialGigData, logOutProps, userStateProps } from '../../types/interfaces/IHomeProvider';
 
-interface logOutProps {
-  navigation: StackNavigationProp<RootStackParamsList>;
-  bottomNavigation: BottomTabNavigationProp<BottomStackParamsList>;
-}
-
-export type userStateProps = {
-  __v: number;
-  _id: string;
-  email: string;
-  isVerified: boolean;
-  role: string;
-  username: string;
-  location: string;
-  profilePic: any;
-  title: string;
-  skills: any[];
-  isTick: boolean;
-  bio: string;
-  about_me: string;
-  phoneNumber: string;
-  isDocumentVerified: string;
-};
-
-type dataProps = {
-  id: number;
-  what: string;
-  text: string;
-};
-
-export interface GigData {
-  gig: any[];
-}
-
-export interface getJobProps {
-  getGig: () => Promise<GigData>;
-}
-
-export const initialGigData: GigData = {
-  gig: [],
-};
-
+/**
+ * @function Home
+ * @description This function is used to render the Home screen for the Job Provider.
+ * @param {object} props - The props object containing navigation and bottomNavigation.
+ */
 const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
   const user: userStateProps = useGlobalStore((state: any) => state.user);
   const [isPopular, setIsPopular] = React.useState<boolean>(true);
@@ -190,7 +159,21 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
 
   const setLocation = useLocationStore((state: any) => state.setLocation);
 
-  //search gig
+  /**
+   * @function searchGig
+   * @description This function is used to search for gigs based on various criteria.
+   * @param {string} searchText - The text to search for.
+   * @param {string} selectedCategory - The selected category for the search.
+   * @param {any} selectedDistance - The selected distance for the search.
+   * @param {boolean} lowToHigh - Whether to sort the results from low to high.
+   * @param {boolean} highToLow - Whether to sort the results from high to low.
+   * @param {boolean} sortByRating - Whether to sort the results by rating.
+   * @param {number} page - The current page number for pagination.
+   * @param {number} limit - The number of results to return per page.
+   * @param {number} lat - The latitude of the user's location.
+   * @param {number} long - The longitude of the user's location.
+   * @returns {Promise<void>}
+   */
   const searchGig = useCallback(
     async (
       searchText: string,
@@ -245,7 +228,13 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
     [],
   );
 
-  //get near by Gig
+  /**
+   * @function getNearbyGig
+   * @description This function is used to get nearby gigs based on the user's location.
+   * @param {number} latitude - The latitude of the user's location.
+   * @param {number} longitude - The longitude of the user's location.
+   * @returns {Promise<void>}
+   */
   const getNearbyGig = useCallback(
     async (latitude: number, longitude: number) => {
       const response = await (FetchGigStore.getState() as any).getNearbyGig(
@@ -257,6 +246,11 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
     [],
   );
 
+  /**
+   * @function requestLocationPermission
+   * @description This function is used to request location permission from the user.
+   * @returns {Promise<void>}
+   */
   const requestLocationPermission = useCallback(async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -317,6 +311,10 @@ const Home = memo(({navigation, bottomNavigation}: logOutProps) => {
     requestLocationPermission,
   ]);
 
+  /**
+   * @function handleOkFunction
+   * @description This function is used to handle the OK button click in the search modal.
+   */
   const handleOkFunction = useCallback(() => {
     setModalVisible(false);
     setIsLoading(true);
